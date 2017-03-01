@@ -4,7 +4,7 @@
 
 #div-suggestions h3{
     text-align: center;
-    display: inline-block;
+    display: block;
     font-size: 40px;
     margin-bottom: 1em;
 }
