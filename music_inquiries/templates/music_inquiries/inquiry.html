@@ -4,7 +4,7 @@
 
 <div id="div-suggestions">
   <div>
-    <h3 class="light-grey-font">{{ inquiry.text }}<span id="plus-sign-inquiry-suggestions-title" class="glyphicon glyphicon-plus-sign red-font" aria-hidden="true"/></h3>
+    <h3 class="light-grey-font">{{ inquiry.text }}<span id="plus-sign-inquiry-suggestions-title" class="glyphicon glyphicon-plus-sign red-font" aria-hidden="true" data-toggle="modal" data-target="#myModal"/></h3>
   </div>
   <div id="suggestions-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
 
@@ -31,6 +31,30 @@
 
   </div>
 
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Make Song Suggestion</h4>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'music_inquiries:suggestion' inquiry.id %}" method="post" id="submit-suggestion-form">
+          {% csrf_token %}
+          <input type="text" placeholder="Song Artist" name="song_artist"/>
+          <input type="text" placeholder="Song Name" name="song_name"/>
+          <input type="text" placeholder="Youtube URL" name="youtube_url"/>
+          <input type="submit" value="Submit">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock %}
