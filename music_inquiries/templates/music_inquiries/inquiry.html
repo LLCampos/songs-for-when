@@ -1,0 +1,36 @@
+{% extends 'music_inquiries/base.html' %}
+
+{% block content %}
+
+<div id="div-suggestions">
+  <div>
+    <h3 class="light-grey-font">{{ inquiry.text }}<span id="plus-sign-inquiry-suggestions-title" class="glyphicon glyphicon-plus-sign red-font" aria-hidden="true"/></h3>
+  </div>
+  <div id="suggestions-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
+
+    <div class="carousel-inner" role="listbox">
+      {% for suggestion in suggestions %}
+        {% if forloop.counter0 == 0 %}
+          <div class="item active">
+        {% else %}
+          <div class="item">
+        {% endif %}
+            <iframe class="iframe-suggestion" src="{{ suggestion.song.youtube_url }}" frameborder="0" allowfullscreen></iframe>
+          </div>
+      {% endfor %}
+    </div>
+
+    <a class="left carousel-control suggestions-carousel-control" href="#suggestions-carousel" role="button" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control suggestions-carousel-control" href="#suggestions-carousel" role="button" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+#submit-inquiry-form {
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 80%;
+}
+
+#inquiry-text-input {
+    display: block;
+    background: 0, 0;
+    border: none;
+    font-size: 50px;
+    width: 100%;
+}
+
+#inquiry-text-input:focus {
+    outline: none;
+}
+
+#inquiry-text-input::-webkit-input-placeholder { color: #ff5252; }
+#inquiry-text-input:-moz-placeholder { color: #ff5252; }
+#inquiry-text-input::-moz-placeholder { color: #ff5252; }
+#inquiry-text-input:-ms-input-placeholder { color: #ff5252; }
+
+#inquiry-text-input:focus::-webkit-input:focus-placeholder { color: #D3D3D3; }
+#inquiry-text-input:focus:-moz-placeholder { color: #D3D3D3; }
+#inquiry-text-input:focus::-moz-placeholder { color: #D3D3D3; }
+#inquiry-text-input:focus:-ms-input-placeholder { color: #D3D3D3; }

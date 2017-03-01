@@ -1,0 +1,37 @@
+#div-suggestions {
+    margin: auto;
+}
+
+#div-suggestions h3{
+    text-align: center;
+    display: inline-block;
+    font-size: 40px;
+    margin-bottom: 1em;
+}
+
+#div-suggestions iframe {
+    display: block;
+    margin: auto;
+}
+
+#suggestions-carousel {
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.iframe-suggestion {
+    width: 420px;
+    height: 315px;
+}
+
+#plus-sign-inquiry-suggestions-title {
+    font-size: 0.8em;
+    top: 0.20em;
+    left: 0.25em;
+}
+
+#plus-sign-inquiry-suggestions-title:hover {
+    cursor: pointer;
+}
+

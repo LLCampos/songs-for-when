@@ -1,0 +1,16 @@
+{% extends 'music_inquiries/base.html' %}
+
+{% block content %}
+
+{% if inquiries %}
+    <ul>
+    {% for inquiry in inquiries %}
+        <li><a href="{% url 'music_inquiries:inquiry' inquiry.id %}">{{ inquiry.text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No inquiries are available.</p>
+{% endif %}
+
+
+{% endblock %}
