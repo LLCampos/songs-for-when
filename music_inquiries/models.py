@@ -3,14 +3,28 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
+import urlparse
+
 
 class SongManager(models.Manager):
+
+    def process_youtube_url(self, youtube_url):
+        """Assuming that the user will send the Youtube URL in the format seen
+        in the browser. Ex: https://www.youtube.com/watch?v=CvBfHwUxHIk
+
+        Transforms this into an URL that can embed in the HTML. Ex:
+        https://www.youtube.com/embed/CvBfHwUxHIk
+        """
+        parsed = urlparse.urlparse(youtube_url)
+        video_id = urlparse.parse_qs(parsed.query)['v'][0]
+
+        return 'https://www.youtube.com/embed/{}'.format(video_id)
 
     def create_song(self, artist_name, song_name, youtube_url):
         song = self.create(
             artist_name=artist_name,
             song_name=song_name,
-            youtube_url=youtube_url
+            youtube_url=self.process_youtube_url(youtube_url)
         )
         return song
 

@@ -37,3 +37,16 @@ class TestSongModel(TestCase):
             artist_name='Megadeth',
             song_name='A Garagem da Vizinha')
         )
+
+    def test_youtube_url_processing(self):
+
+        song = Song.objects.create_song(
+            artist_name='Eminem',
+            song_name='Love The Way You Lie',
+            youtube_url='https://www.youtube.com/watch?v=uelHwf8o7_U'
+        )
+
+        self.assertEqual(
+            song.youtube_url,
+            'https://www.youtube.com/embed/uelHwf8o7_U'
+        )
