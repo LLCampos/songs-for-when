@@ -1,2 +1,5 @@
 songs_for_when/settings_secret.py
+htmlcov/
+.coverage
 *.pyc
+db.sqlite3
