@@ -1,13 +1,13 @@
 from django.test import TestCase
+from django.db import IntegrityError
+
 from music_inquiries.models import Song
+
 
 # Test Models
 
 
 class TestSongModel(TestCase):
-
-    def setUp(self):
-        pass
 
     def test_create_song(self):
 
@@ -49,4 +49,20 @@ class TestSongModel(TestCase):
         self.assertEqual(
             song.youtube_url,
             'https://www.youtube.com/embed/uelHwf8o7_U'
+        )
+
+    def test_insert_duplicated_songs(self):
+        """Should raise IntegrityError when trying to insert already existent
+        song."""
+
+        artist_name = 'Mew'
+        song_name = 'Snow Brigade'
+        youtube_url = 'https://www.youtube.com/watch?v=ZctGnled2tk'
+
+        Song.objects.create_song(artist_name, song_name, youtube_url)
+
+        self.assertRaises(
+            IntegrityError,
+            Song.objects.create_song,
+            artist_name, song_name, youtube_url
         )
