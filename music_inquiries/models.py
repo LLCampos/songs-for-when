@@ -68,14 +68,26 @@ class MusicInquiry(models.Model):
 
 class SongSuggestionManager(models.Manager):
 
-    def create_suggestion(self, music_inquiry, user, song_name, artist_name, youtube_url=False):
+    def create_suggestion(self, music_inquiry, user,
+                          artist_name, song_name, youtube_url=False):
 
-        if Song.objects.does_song_exist(song_name, artist_name):
-            song = Song.objects.get(song_name=song_name, artist_name=artist_name)
+        if Song.objects.does_song_exist(artist_name, song_name):
+            song = Song.objects.get(
+                song_name=song_name,
+                artist_name=artist_name
+            )
         else:
-            song = Song.objects.create_song(song_name, artist_name, youtube_url)
+            song = Song.objects.create_song(
+                artist_name=artist_name,
+                song_name=song_name,
+                youtube_url=youtube_url
+            )
 
-        suggestion = self.create(user=user, song=song, music_inquiry=music_inquiry)
+        suggestion = self.create(
+            user=user,
+            song=song,
+            music_inquiry=music_inquiry
+        )
         return suggestion
 
 
