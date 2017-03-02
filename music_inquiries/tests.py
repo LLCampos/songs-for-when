@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.db import IntegrityError
+from django.contrib.auth.models import User
 
-from music_inquiries.models import Song
+from music_inquiries.models import *
 
 
 # Test Models
@@ -65,4 +66,39 @@ class TestSongModel(TestCase):
             IntegrityError,
             Song.objects.create_song,
             artist_name, song_name, youtube_url
+        )
+
+
+class testMusicInquiry(TestCase):
+
+    def setUp(self):
+        self.user1 = User.objects.create_user('John')
+        self.user2 = User.objects.create_user('Anna')
+
+    def test_create_music_inquiry(self):
+        inquiry_text = 'Songs for tests.'
+
+        inquiry = MusicInquiry.objects.create_music_inquiry(
+            text=inquiry_text,
+            user=self.user1
+        )
+
+        self.assertEqual(inquiry_text, inquiry.text)
+        self.assertEqual(self.user1, inquiry.user)
+
+    def test_insert_duplicated_inquiries(self):
+        """Should raise IntegrityError when trying to insert already existent
+        inquiry."""
+
+        inquiry_text = 'Another songs for tests.'
+
+        MusicInquiry.objects.create_music_inquiry(
+            text=inquiry_text,
+            user=self.user1
+        )
+
+        self.assertRaises(
+            IntegrityError,
+            MusicInquiry.objects.create_music_inquiry,
+            self.user2, inquiry_text,
         )
