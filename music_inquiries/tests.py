@@ -102,3 +102,77 @@ class testMusicInquiry(TestCase):
             MusicInquiry.objects.create_music_inquiry,
             self.user2, inquiry_text,
         )
+
+
+class testSongSuggestion(TestCase):
+
+    def setUp(self):
+
+        self.user = User.objects.create_user('Louis')
+
+        self.song = Song.objects.create_song(
+            artist_name='Slayer',
+            song_name='Raining Blood',
+            youtube_url='https://www.youtube.com/watch?v=z8ZqFlw6hYg'
+        )
+
+        self.inquiry = MusicInquiry.objects.create_music_inquiry(
+            text='Music for when it\'s raining blood',
+            user=self.user
+        )
+
+    def test_add_existent_song(self):
+
+        suggestion = SongSuggestion.objects.create_suggestion(
+            music_inquiry=self.inquiry,
+            user=self.user,
+            artist_name='Slayer',
+            song_name='Raining Blood',
+        )
+
+        self.assertEqual(suggestion.music_inquiry, self.inquiry)
+        self.assertEqual(suggestion.user, self.user)
+        self.assertEqual(suggestion.song, self.song)
+
+    def test_add_non_existent_song(self):
+
+        artist_name = 'The Weeknd',
+        song_name = 'Starboy'
+        youtube_url = 'https://www.youtube.com/watch?v=34Na4j8AVgA'
+
+        suggestion = SongSuggestion.objects.create_suggestion(
+            music_inquiry=self.inquiry,
+            user=self.user,
+            artist_name=artist_name,
+            song_name=song_name,
+            youtube_url=youtube_url,
+        )
+
+        self.assertEqual(suggestion.music_inquiry, self.inquiry)
+        self.assertEqual(suggestion.user, self.user)
+        self.assertEqual(suggestion.song.artist_name, artist_name)
+        self.assertEqual(suggestion.song.song_name, song_name)
+
+    def test_add_duplicated_suggestion(self):
+
+        artist_name = 'The Big Pink',
+        song_name = 'Dominos'
+        youtube_url = 'https://www.youtube.com/watch?v=OGnNlQ-KNv4'
+
+        SongSuggestion.objects.create_suggestion(
+            music_inquiry=self.inquiry,
+            user=self.user,
+            artist_name=artist_name,
+            song_name=song_name,
+            youtube_url=youtube_url,
+        )
+
+        self.assertRaises(
+            IntegrityError,
+            SongSuggestion.objects.create_suggestion,
+            music_inquiry=self.inquiry,
+            user=self.user,
+            artist_name=artist_name,
+            song_name=song_name,
+            youtube_url=youtube_url,
+        )
