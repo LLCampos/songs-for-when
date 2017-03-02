@@ -7,11 +7,18 @@ from django.contrib.auth.models import User
 class SongManager(models.Manager):
 
     def create_song(self, artist_name, song_name, youtube_url):
-        song = self.create(artist_name=artist_name, song_name=song_name, youtube_url=youtube_url)
+        song = self.create(
+            artist_name=artist_name,
+            song_name=song_name,
+            youtube_url=youtube_url
+        )
         return song
 
     def does_song_exist(self, artist_name, song_name):
-        return self.filter(artist_name=artist_name, song_name=song_name).exists()
+        return self.filter(
+            artist_name=artist_name,
+            song_name=song_name
+        ).exists()
 
 
 class Song(models.Model):
