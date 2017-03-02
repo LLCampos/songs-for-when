@@ -6,26 +6,26 @@ from django.contrib.auth.models import User
 
 class SongManager(models.Manager):
 
-    def create_song(self, name, artist, youtube_url):
-        song = self.create(name=name, artist=artist, youtube_url=youtube_url)
+    def create_song(self, artist_name, song_name, youtube_url):
+        song = self.create(artist_name=artist_name, song_name=song_name, youtube_url=youtube_url)
         return song
 
-    def does_song_exist(self, name, artist):
-        return self.filter(name=name, artist=artist).exists()
+    def does_song_exist(self, artist_name, song_name):
+        return self.filter(artist_name=artist_name, song_name=song_name).exists()
 
 
 class Song(models.Model):
-    name = models.CharField(max_length=100)
-    artist = models.CharField(max_length=100)
+    artist_name = models.CharField(max_length=100)
+    song_name = models.CharField(max_length=100)
     youtube_url = models.URLField()
 
     class Meta:
-        unique_together = ('name', 'artist',)
+        unique_together = ('song_name', 'artist_name',)
 
     objects = SongManager()
 
     def __str__(self):
-        return self.artist + '- ' + self.name
+        return self.artist_name + '- ' + self.song_name
 
 
 class MusicInquiryManager(models.Manager):
@@ -47,12 +47,12 @@ class MusicInquiry(models.Model):
 
 class SongSuggestionManager(models.Manager):
 
-    def create_suggestion(self, music_inquiry, user, song_name, song_artist, youtube_url=False):
+    def create_suggestion(self, music_inquiry, user, song_name, artist_name, youtube_url=False):
 
-        if Song.objects.does_song_exist(song_name, song_artist):
-            song = Song.objects.get(name=song_name, artist=song_artist)
+        if Song.objects.does_song_exist(song_name, artist_name):
+            song = Song.objects.get(song_name=song_name, artist_name=artist_name)
         else:
-            song = Song.objects.create_song(song_name, song_artist, youtube_url)
+            song = Song.objects.create_song(song_name, artist_name, youtube_url)
 
         suggestion = self.create(user=user, song=song, music_inquiry=music_inquiry)
         return suggestion
