@@ -6,8 +6,6 @@ from music_inquiries.models import *
 
 
 # Test Models
-
-
 class TestSongModel(TestCase):
 
     def test_create_song(self):
