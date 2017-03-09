@@ -19,7 +19,7 @@ def inquiries_listing(request):
                 inquiry_text = request.POST['inquiry_text']
             except(KeyError):
                 raise Http404(
-                    "'inquiry' parameter was not sent in the request."
+                    "'inquiry_text' parameter was not sent in the request."
                 )
 
             inquiry = MusicInquiry.objects.create_music_inquiry(

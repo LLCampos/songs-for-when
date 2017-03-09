@@ -1,0 +1,56 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$30000$iC1Kl5YNw82S$4EpHvt6kPi5GUbqpo8k2JsDlFwgEnLyl1HrUpnPDAdE=",
+        "last_login": "2017-03-01T18:25:06.899Z",
+        "is_superuser": true,
+        "username": "LLCampos",
+        "first_name": "Lu\u00eds",
+        "last_name": "Campos",
+        "email": "luis1212@sapo.pt",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2017-01-29T19:57:33.948Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$30000$3wI29x6F3RRl$LCLDtwX71QzPsfUb7drGjAmUlADjFk3eQWRXntJPqZ4=",
+        "last_login": "2017-03-05T20:03:03.741Z",
+        "is_superuser": false,
+        "username": "JonSnow",
+        "first_name": "Jon",
+        "last_name": "Snow",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2017-03-01T15:04:48Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$30000$FSIKIJD4JXoY$QtD/WHb0C1oDMA+9mQcTmcszSM/79XOx6sW+Zwd4djo=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "MafaldaCampos",
+        "first_name": "Mafalda",
+        "last_name": "Campos",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2017-03-01T15:13:44Z",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

@@ -1,8 +1,5 @@
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
-
-from music_inquiries.models import MusicInquiry
 
 from selenium import webdriver
 
@@ -27,15 +24,14 @@ def login_user(driver, username, password):
 
 class TestsIndexView(TestCase):
 
+    fixtures = ['User.json', 'MusicInquiry.json']
+
     def setUp(self):
         self.client = Client()
         self.driver = webdriver.Chrome()
 
+        self.user_name = 'JonSnow'
         self.user_password = 'iknownothing'
-        self.user = User.objects.create_user(
-            username='JonSnow',
-            password=self.user_password
-        )
 
     def test_page_ok(self):
         response = self.client.get(INDEX_URL)
@@ -53,7 +49,7 @@ class TestsIndexView(TestCase):
     def test_submit_inquiry_login(self):
 
         self.driver.get(HOST + INDEX_URL)
-        login_user(self.driver, self.user.username, self.user_password)
+        login_user(self.driver, self.user_name, self.user_password)
         self.driver.find_element_by_id('submit-inquiry-form').click()
 
         self.assertIn(INQUIRIES_LISTING_URL, self.driver.current_url)
@@ -71,14 +67,10 @@ class TestsInquiriesListingView(TestCase):
 
 class TestsInquiryView(TestCase):
 
+    fixtures = ['User.json', 'MusicInquiry.json']
+
     def setUp(self):
         self.client = Client()
-        self.user = User.objects.create_user('John')
-
-        self.inquiry = MusicInquiry.objects.create_music_inquiry(
-            text='test',
-            user=self.user
-        )
 
     def test_page_ok(self):
         response = self.client.get(reverse(
