@@ -18,7 +18,9 @@ def inquiries_listing(request):
             try:
                 inquiry_text = request.POST['inquiry_text']
             except(KeyError):
-                raise Http404("'inquiry' parameter was not sent in the request.")
+                raise Http404(
+                    "'inquiry' parameter was not sent in the request."
+                )
 
             inquiry = MusicInquiry.objects.create_music_inquiry(
                 user=request.user,
@@ -59,7 +61,9 @@ def suggestion(request, inquiry_id):
             song_artist = request.POST['song_artist']
             youtube_url = request.POST['youtube_url']
         except(KeyError):
-            raise Http404("Some of the requires parameters was not sent in the request.")
+            raise Http404(
+                "Some of the requires parameters was not sent in the request."
+            )
 
         suggestion = SongSuggestion.objects.create_suggestion(
             user=request.user,
