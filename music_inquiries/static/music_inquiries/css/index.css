@@ -27,3 +27,8 @@
 #inquiry-text-input:focus:-moz-placeholder { color: #D3D3D3; }
 #inquiry-text-input:focus::-moz-placeholder { color: #D3D3D3; }
 #inquiry-text-input:focus:-ms-input-placeholder { color: #D3D3D3; }
+
+#inquiry-submit-form-button:hover {
+    cursor: pointer;
+}
+
