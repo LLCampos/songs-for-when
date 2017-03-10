@@ -39,14 +39,13 @@ class TestsIndexView(TestCase):
         response = self.client.get(INDEX_URL)
         self.assertEqual(200, response.status_code)
 
-    def test_submit_inquiry_no_login(self):
-        """User should be redirected to the login page."""
-
-        login_page_url = reverse('login') + '?next=' + INDEX_URL
+    def test_submit_inquiry_button_disabled_no_login(self):
+        """If user is not authenticated, button to submit inquiry should be
+        disabled."""
 
         self.driver.get(HOST + INDEX_URL)
-        self.driver.find_element_by_id('submit-inquiry-form').click()
-        self.assertIn(login_page_url, self.driver.current_url)
+        submit_button = self.driver.find_element_by_id('submit-inquiry-form')
+        self.assertFalse(submit_button.is_enabled())
 
     def test_submit_inquiry_login(self):
 

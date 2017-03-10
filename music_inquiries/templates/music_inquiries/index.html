@@ -2,11 +2,16 @@
 
 {% block content %}
 
-
 <form action="{% url 'music_inquiries:inquiries_listing' %}" method="post" id="inquiry-form">
   {% csrf_token %}
   <input id="inquiry-text-input" type="text" name="inquiry_text" placeholder="What kind of music are you looking for?" class="light-grey-font">
-  <input id="submit-inquiry-form" type="submit" value="Submit">
+  <input id="submit-inquiry-form" class="btn btn-default" type="submit" value="Ask for Sugestions"
+  {% if user.is_authenticated %}
+    >
+  {% else %}
+    disabled>
+  {% endif %}
+
 </form>
 
 {% endblock %}
