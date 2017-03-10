@@ -3,6 +3,8 @@ from django.core.urlresolvers import reverse
 
 from selenium import webdriver
 
+from music_inquiries.models import MusicInquiry
+
 HOST = 'http://localhost:8000'
 INQUIRIES_LISTING_URL = reverse('music_inquiries:inquiries_listing')
 INDEX_URL = reverse('music_inquiries:index')
@@ -30,8 +32,8 @@ class TestsIndexView(TestCase):
         self.client = Client()
         self.driver = webdriver.Chrome()
 
-        self.user_name = 'JonSnow'
-        self.user_password = 'iknownothing'
+        self.test_username = 'JonSnow'
+        self.test_password = 'iknownothing'
 
     def test_page_ok(self):
         response = self.client.get(INDEX_URL)
@@ -49,7 +51,7 @@ class TestsIndexView(TestCase):
     def test_submit_inquiry_login(self):
 
         self.driver.get(HOST + INDEX_URL)
-        login_user(self.driver, self.user_name, self.user_password)
+        login_user(self.driver, self.test_username, self.test_password)
         self.driver.find_element_by_id('submit-inquiry-form').click()
 
         self.assertIn(INQUIRIES_LISTING_URL, self.driver.current_url)
@@ -57,12 +59,58 @@ class TestsIndexView(TestCase):
 
 class TestsInquiriesListingView(TestCase):
 
+    fixtures = ['User.json', 'MusicInquiry.json']
+
     def setUp(self):
         self.client = Client()
+
+        self.test_username = 'JonSnow'
+        self.test_password = 'iknownothing'
 
     def test_page_ok(self):
         response = self.client.get(INQUIRIES_LISTING_URL)
         self.assertEqual(200, response.status_code)
+
+    def test_post_not_auth(self):
+        response = self.client.post(
+            INQUIRIES_LISTING_URL,
+            {'inquiry_text': 'test'}
+        )
+        self.assertEqual(401, response.status_code)
+
+    def test_post_repeated_inquiry(self):
+        """Inquiry text being sent is equal to the one the fixture, so the POST
+        request should return an error"""
+
+        self.client.login(
+            username=self.test_username,
+            password=self.test_password
+        )
+        response = self.client.post(
+            INQUIRIES_LISTING_URL,
+            {'inquiry_text': 'test inquiry'}
+        )
+        self.assertEqual(400, response.status_code)
+
+    def test_post_ok_inquiry(self):
+        """Inquiry text being sent is equal to the one the fixture, so the POST
+        request should return an error"""
+
+        number_inquiries_before = len(MusicInquiry.objects.all())
+
+        self.client.login(
+            username=self.test_username,
+            password=self.test_password
+        )
+        response = self.client.post(
+            INQUIRIES_LISTING_URL,
+            {'inquiry_text': 'another test inquiry'}
+        )
+
+        number_inquiries_after = len(MusicInquiry.objects.all())
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(number_inquiries_before + 1, number_inquiries_after)
 
 
 class TestsInquiryView(TestCase):

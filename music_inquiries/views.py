@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import Http404
+from django.shortcuts import render, get_object_or_404
+from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 
 
 from models import MusicInquiry, SongSuggestion
@@ -22,19 +23,33 @@ def inquiries_listing(request):
                     "'inquiry_text' parameter was not sent in the request."
                 )
 
-            inquiry = MusicInquiry.objects.create_music_inquiry(
-                user=request.user,
-                text=inquiry_text
-            )
+            try:
+                inquiry = MusicInquiry.objects.create_music_inquiry(
+                    user=request.user,
+                    text=inquiry_text
+                )
 
-            inquiry.save()
+                inquiry.save()
+                return HttpResponse(status=200)
+
+            except(IntegrityError):
+                return HttpResponse(
+                    'Error when adding inquiry to database',
+                    status=400
+                )
 
         else:
-            return redirect('/accounts/login/?next=/')
+            return HttpResponse('Unauthorized', status=401)
 
-    latest_inquiries = MusicInquiry.objects.order_by('-created_at')[:15]
-    context = {'inquiries': latest_inquiries}
-    return render(request, 'music_inquiries/inquiries_listing.html', context)
+    elif request.method == 'GET':
+
+        latest_inquiries = MusicInquiry.objects.order_by('-created_at')[:15]
+        context = {'inquiries': latest_inquiries}
+        return render(
+            request,
+            'music_inquiries/inquiries_listing.html',
+            context
+        )
 
 
 def inquiry(request, inquiry_id):
