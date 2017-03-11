@@ -35,6 +35,9 @@ class TestsIndexView(TestCase):
         self.test_username = 'JonSnow'
         self.test_password = 'iknownothing'
 
+    def tearDown(self):
+        self.driver.quit()
+
     def test_page_ok(self):
         response = self.client.get(INDEX_URL)
         self.assertEqual(200, response.status_code)
