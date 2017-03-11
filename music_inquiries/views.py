@@ -36,13 +36,10 @@ def inquiries_listing(request):
                 )
 
             try:
-                inquiry = MusicInquiry.objects.create_music_inquiry(
+                MusicInquiry.objects.create_music_inquiry(
                     user=request.user,
                     text=inquiry_text
                 )
-
-                # Should I remove this?
-                inquiry.save()
 
             except(IntegrityError, ValidationError):
                 return HttpResponse(
