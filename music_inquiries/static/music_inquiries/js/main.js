@@ -1,3 +1,14 @@
+// General
+
+String.prototype.allTrim = String.prototype.allTrim ||
+     function(){
+        return this.replace(/\s+/g,' ')
+                   .replace(/^\s+|\s+$/,'');
+     };
+
+
+// Suggestion
+
 pauseYoutubeVideos = function() {
   const iframe = $('.item.active').find('.iframe-suggestion');
   let src = iframe.attr('src');
@@ -6,12 +17,17 @@ pauseYoutubeVideos = function() {
 
 // Index
 
-numberCharsInInquiryInput = function() {
-  return $('#inquiry-text-input').val().length;
+let inquiry = {
+  text: function() {
+    return $('#inquiry-text-input').val().allTrim();
+  },
+  clean: function() {
+    $('#inquiry-text-input').val('');
+  }
 };
 
 updateCharsLeftOnInquirySubmitButton = function() {
-  let charsLeft = 10 - numberCharsInInquiryInput();
+  let charsLeft = 10 - inquiry.text().length;
   $('#inquiry-submit-form-button').attr('value',  charsLeft.toString() + ' characters left');
 };
 
@@ -20,12 +36,17 @@ $(function() {
 
   // ########### Index ###########
 
+
   $('#inquiry-text-input').focusout(function() {
+    if (inquiry.text().length === 0) {
+      inquiry.clean();
+    }
     $('#inquiry-submit-form-button').attr('value', 'Ask for Suggestions');
   });
 
+  // Implement restriction on min length
   $(document).on('keyup focus','#inquiry-text-input',function(e) {
-    if (numberCharsInInquiryInput() >= 10) {
+    if (inquiry.text().length >= 10) {
       $('#inquiry-submit-form-button').attr('value', 'Ask for Suggestions')
                                       .prop('disabled', false);
     } else {
@@ -40,7 +61,7 @@ $(function() {
     $.ajax({
       url: 'http://localhost:8000/inquiry/',
       type: 'HEAD',
-      data: {'q': $('#inquiry-text-input').val()},
+      data: {'q': inquiry.text()},
     })
     .done(function() {
       // If inquiry already exists.
