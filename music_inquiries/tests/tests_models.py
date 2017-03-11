@@ -101,6 +101,21 @@ class testMusicInquiry(TestCase):
             self.user2, inquiry_text,
         )
 
+    def test_music_inquiry_exists_method(self):
+
+        inquiry_text = 'Songs for tests.'
+
+        MusicInquiry.objects.create_music_inquiry(
+            text=inquiry_text,
+            user=self.user1
+        )
+
+        exists = MusicInquiry.objects.does_music_inquiry_exist(inquiry_text)
+        not_exists = MusicInquiry.objects.does_music_inquiry_exist('No exist')
+
+        self.assertTrue(exists)
+        self.assertFalse(not_exists)
+
 
 class testSongSuggestion(TestCase):
 

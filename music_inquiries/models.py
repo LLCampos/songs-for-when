@@ -54,6 +54,9 @@ class MusicInquiryManager(models.Manager):
         music_inquiry = self.create(user=user, text=text)
         return music_inquiry
 
+    def does_music_inquiry_exist(self, inquiry_text):
+        return self.filter(text=inquiry_text).exists()
+
 
 class MusicInquiry(models.Model):
     user = models.ForeignKey(User)
