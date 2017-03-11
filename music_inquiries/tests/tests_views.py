@@ -76,6 +76,25 @@ class TestsIndexView(TransactionTestCase):
         self.assertFalse(submit_button.is_enabled())
         self.assertEqual('6 characters left', button_message)
 
+    def test_submit_whitespaces(self):
+        """Inquiry should only count as having 2 characters. (the letter and
+        one space)"""
+
+        self.driver.get(HOST + INDEX_URL)
+        login_user(self.driver, self.test_username, self.test_password)
+
+        inquiry_input = self.driver.find_element_by_name('inquiry_text')
+        inquiry_input.send_keys('      a       ')
+
+        submit_button = self.driver.find_element_by_id(
+            'inquiry-submit-form-button'
+        )
+
+        button_message = submit_button.get_attribute('value')
+
+        self.assertFalse(submit_button.is_enabled())
+        self.assertEqual('8 characters left', button_message)
+
     # def test_submit_legal_inquiry(self):
 
     #     self.driver.get(HOST + INDEX_URL)
