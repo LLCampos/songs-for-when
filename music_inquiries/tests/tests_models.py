@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.db import IntegrityError
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 from music_inquiries.models import *
 
@@ -115,6 +116,34 @@ class testMusicInquiry(TestCase):
 
         self.assertTrue(exists)
         self.assertFalse(not_exists)
+
+    def test_add_short_inquiry(self):
+
+        inquiry_text = 'test'
+
+        self.assertRaises(
+            ValidationError,
+            MusicInquiry.objects.create_music_inquiry,
+            self.user1, inquiry_text,
+        )
+
+        does_exist = MusicInquiry.objects.does_music_inquiry_exist(inquiry_text)
+        self.assertFalse(does_exist)
+
+    def test_add_big_inquiry(self):
+
+        inquiry_text = ('this should have more than 80 chars. ',
+                        'this should have more than 80 chars. ',
+                        'this should have more than 80 chars.')
+
+        self.assertRaises(
+            ValidationError,
+            MusicInquiry.objects.create_music_inquiry,
+            self.user1, inquiry_text,
+        )
+
+        does_exist = MusicInquiry.objects.does_music_inquiry_exist(inquiry_text)
+        self.assertFalse(does_exist)
 
 
 class testSongSuggestion(TestCase):

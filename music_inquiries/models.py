@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 
 import urlparse
 
@@ -51,7 +52,9 @@ class Song(models.Model):
 
 class MusicInquiryManager(models.Manager):
     def create_music_inquiry(self, user, text):
-        music_inquiry = self.create(user=user, text=text)
+        music_inquiry = MusicInquiry(user=user, text=text)
+        music_inquiry.clean_fields()
+        music_inquiry.save()
         return music_inquiry
 
     def does_music_inquiry_exist(self, inquiry_text):
@@ -60,7 +63,11 @@ class MusicInquiryManager(models.Manager):
 
 class MusicInquiry(models.Model):
     user = models.ForeignKey(User)
-    text = models.CharField(max_length=500, unique=True)
+    text = models.CharField(
+        max_length=80,
+        unique=True,
+        validators=[MinLengthValidator(10), MaxLengthValidator(80)]
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = MusicInquiryManager()
