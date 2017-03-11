@@ -18,7 +18,7 @@ updateCharsLeftOnInquirySubmitButton = function() {
 
 $(function() {
 
-  // Index
+  // ########### Index ###########
 
   $('#inquiry-text-input').focusout(function() {
     $('#inquiry-submit-form-button').attr('value', 'Ask for Suggestions');
@@ -32,6 +32,27 @@ $(function() {
       updateCharsLeftOnInquirySubmitButton();
       $('#inquiry-submit-form-button').prop('disabled', true);
     }
+  });
+
+  // Avoid sending of repeated inquiries
+  $('#inquiry-form').submit(function(event) {
+    thisForm = this;
+    $.ajax({
+      url: 'http://localhost:8000/inquiry/',
+      type: 'HEAD',
+      data: {'q': $('#inquiry-text-input').val()},
+    })
+    .done(function() {
+      // If inquiry already exists.
+      alert('Inquiry already exists! :)');
+    })
+    .fail(function() {
+      // If inquiry does not exists.
+      thisForm.submit();
+    });
+
+    event.preventDefault();
+
   });
 
   // Inquiry

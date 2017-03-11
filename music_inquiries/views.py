@@ -13,7 +13,18 @@ def index(request):
 
 def inquiries_listing(request):
 
-    if request.method == 'POST':
+    if request.method == 'HEAD':
+        """Method used to check if a certain inquiry text was already
+        submitted"""
+
+        query = request.GET['q']
+
+        if MusicInquiry.objects.does_music_inquiry_exist(query):
+            return HttpResponse(status=200)
+        else:
+            return HttpResponse(status=404)
+
+    elif request.method == 'POST':
 
         if request.user.is_authenticated():
             try:

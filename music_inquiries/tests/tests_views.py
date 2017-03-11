@@ -141,6 +141,28 @@ class TestsInquiriesListingView(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(number_inquiries_before + 1, number_inquiries_after)
 
+    def test_head_query_method_existent_inquiry(self):
+        """Request should return code 200 because inquiry resource already
+        exists"""
+
+        response = self.client.head(
+            INQUIRIES_LISTING_URL,
+            {'q': 'test inquiry'}
+        )
+
+        self.assertEqual(200, response.status_code)
+
+    def test_head_query_method_non_existent_inquiry(self):
+        """Request should return code 404 because inquiry resource does not
+        exist"""
+
+        response = self.client.head(
+            INQUIRIES_LISTING_URL,
+            {'q': 'test inquiry non existent'}
+        )
+
+        self.assertEqual(404, response.status_code)
+
 
 class TestsInquiryView(TestCase):
 
