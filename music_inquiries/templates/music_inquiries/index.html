@@ -4,9 +4,9 @@
 
 <form action="{% url 'music_inquiries:inquiries_listing' %}" method="post" id="inquiry-form">
   {% csrf_token %}
-  <input id="inquiry-text-input" type="text" name="inquiry_text" placeholder="What kind of music are you looking for?" class="light-grey-font">
+  <input id="inquiry-text-input" type="text" name="inquiry_text" placeholder="What kind of music are you looking for?" class="light-grey-font" maxlength="80">
   {% if user.is_authenticated %}
-    <input id="inquiry-submit-form-button" class="btn btn-default" type="submit" value="Ask for Sugestions">
+    <input id="inquiry-submit-form-button" class="btn btn-default" type="submit" value="Ask for Suggestions" disabled>
   {% else %}
     <a id="inquiry-submit-form-button" class="button btn btn-default" href="{% url 'login'%}?next={{request.path}}" disabled>Login to Ask for Suggestions</a>
   {% endif %}

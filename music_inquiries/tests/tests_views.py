@@ -56,10 +56,31 @@ class TestsIndexView(TestCase):
         self.assertEqual('Login to Ask for Suggestions', button_message)
         self.assertEqual(login_page_url, button_href)
 
-    def test_submit_inquiry_login(self):
+    def test_submit_no_min_length(self):
 
         self.driver.get(HOST + INDEX_URL)
         login_user(self.driver, self.test_username, self.test_password)
+
+        inquiry_input = self.driver.find_element_by_name('inquiry_text')
+        inquiry_input.send_keys('test')
+
+        submit_button = self.driver.find_element_by_id(
+            'inquiry-submit-form-button'
+        )
+
+        button_message = submit_button.get_attribute('value')
+
+        self.assertFalse(submit_button.is_enabled())
+        self.assertEqual('6 characters left', button_message)
+
+    def test_submit_legal_inquiry(self):
+
+        self.driver.get(HOST + INDEX_URL)
+        login_user(self.driver, self.test_username, self.test_password)
+
+        inquiry_input = self.driver.find_element_by_name('inquiry_text')
+        inquiry_input.send_keys('Definitely more than enough characters.')
+
         self.driver.find_element_by_id('inquiry-submit-form-button').click()
 
         self.assertIn(INQUIRIES_LISTING_URL, self.driver.current_url)
