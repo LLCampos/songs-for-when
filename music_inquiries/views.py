@@ -30,7 +30,6 @@ def inquiries_listing(request):
                 )
 
                 inquiry.save()
-                return HttpResponse(status=200)
 
             except(IntegrityError):
                 return HttpResponse(
@@ -41,15 +40,9 @@ def inquiries_listing(request):
         else:
             return HttpResponse('Unauthorized', status=401)
 
-    elif request.method == 'GET':
-
-        latest_inquiries = MusicInquiry.objects.order_by('-created_at')[:15]
-        context = {'inquiries': latest_inquiries}
-        return render(
-            request,
-            'music_inquiries/inquiries_listing.html',
-            context
-        )
+    latest_inquiries = MusicInquiry.objects.order_by('-created_at')[:15]
+    context = {'inquiries': latest_inquiries}
+    return render(request, 'music_inquiries/inquiries_listing.html', context)
 
 
 def inquiry(request, inquiry_id):
