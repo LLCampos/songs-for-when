@@ -144,9 +144,6 @@ class TestsInquiriesListingView(TestCase):
         self.assertEqual(400, response.status_code)
 
     def test_post_ok_inquiry(self):
-        """Inquiry text being sent is equal to the one the fixture, so the POST
-        request should return an error"""
-
         number_inquiries_before = len(MusicInquiry.objects.all())
 
         self.client.login(
