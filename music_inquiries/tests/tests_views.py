@@ -185,6 +185,40 @@ class TestsInquiriesListingView(TestCase):
 
         self.assertEqual(404, response.status_code)
 
+    def test_post_short_inquiry(self):
+
+        inquiry_text = 'short'
+
+        self.client.login(
+            username=self.test_username,
+            password=self.test_password
+        )
+
+        response = self.client.post(
+            INQUIRIES_LISTING_URL,
+            {'inquiry_text': inquiry_text}
+        )
+
+        self.assertEqual(400, response.status_code)
+
+    def test_post_big_inquiry(self):
+
+        inquiry_text = ('this should have more than 80 chars. '
+                        'this should have more than 80 chars. '
+                        'this should have more than 80 chars.')
+
+        self.client.login(
+            username=self.test_username,
+            password=self.test_password
+        )
+
+        response = self.client.post(
+            INQUIRIES_LISTING_URL,
+            {'inquiry_text': inquiry_text}
+        )
+
+        self.assertEqual(400, response.status_code)
+
 
 class TestsInquiryView(TestCase):
 

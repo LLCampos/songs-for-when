@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.core.exceptions import ValidationError
 
 
 from models import MusicInquiry, SongSuggestion
@@ -40,9 +41,10 @@ def inquiries_listing(request):
                     text=inquiry_text
                 )
 
+                # Should I remove this?
                 inquiry.save()
 
-            except(IntegrityError):
+            except(IntegrityError, ValidationError):
                 return HttpResponse(
                     'Error when adding inquiry to database',
                     status=400
