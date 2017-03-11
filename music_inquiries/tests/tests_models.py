@@ -132,8 +132,8 @@ class testMusicInquiry(TestCase):
 
     def test_add_big_inquiry(self):
 
-        inquiry_text = ('this should have more than 80 chars. ',
-                        'this should have more than 80 chars. ',
+        inquiry_text = ('this should have more than 80 chars. '
+                        'this should have more than 80 chars. '
                         'this should have more than 80 chars.')
 
         self.assertRaises(
