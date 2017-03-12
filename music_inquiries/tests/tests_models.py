@@ -148,6 +148,13 @@ class testMusicInquiry(TestCase):
 
 class testSongSuggestion(TestCase):
 
+    fixtures = [
+        'User.json',
+        'SongSuggestion.json',
+        'MusicInquiry.json',
+        'Song.json'
+    ]
+
     def setUp(self):
 
         self.user = User.objects.create_user('Louis')
@@ -218,6 +225,20 @@ class testSongSuggestion(TestCase):
             song_name=song_name,
             youtube_url=youtube_url,
         )
+
+    def test_correct_number_votes(self):
+
+        suggestion = SongSuggestion.objects.get(id=1)
+        user1 = User.objects.get(id=1)
+        user2 = User.objects.get(id=4)
+        user3 = User.objects.get(id=3)
+
+        suggestion.add_vote(user1, 'positive')
+        suggestion.add_vote(user2, 'positive')
+        suggestion.add_vote(user3, 'negative')
+
+        self.assertEqual(2, suggestion.number_positive_votes())
+        self.assertEqual(1, suggestion.number_negative_votes())
 
 
 class testSuggestionVote(TestCase):

@@ -113,6 +113,24 @@ class SongSuggestion(models.Model):
 
     objects = SongSuggestionManager()
 
+    def add_vote(self, user, modality):
+        SuggestionVote.objects.create_vote(user, self, modality)
+
+    def remove_vote(self, user):
+        SuggestionVote.objects.remove_vote(user, self)
+
+    def _number_votes(self, modality):
+        return SuggestionVote.objects.filter(
+            suggestion=self,
+            modality=modality
+        ).count()
+
+    def number_positive_votes(self):
+        return self._number_votes('positive')
+
+    def number_negative_votes(self):
+        return self._number_votes('negative')
+
     def __str__(self):
         return self.song.__str__()
 
@@ -128,6 +146,10 @@ class SuggestionVoteManager(models.Manager):
             raise ValidationError('User can\'t vote in her own Suggestion.')
 
         self.create(user=user, suggestion=suggestion, modality=modality)
+
+    def remove_vote(self, user, suggestion):
+        suggestion = self.get(user=user, suggestion=suggestion)
+        return suggestion.delete()
 
 
 class SuggestionVote(models.Model):
