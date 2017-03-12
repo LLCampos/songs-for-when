@@ -189,3 +189,40 @@ class SuggestionVote(models.Model):
         unique_together = ('user', 'suggestion',)
 
     objects = SuggestionVoteManager()
+
+
+class InquiryProblemReportManager(models.Manager):
+
+    def create_inquiry_report(self, user, inquiry, category, comment=''):
+
+        inquiry = self.create(
+            user=user,
+            inquiry=inquiry,
+            category=category,
+            comment=comment
+        )
+
+        return inquiry
+
+
+class InquiryProblemReport(models.Model):
+
+    user = models.ForeignKey(User)
+    inquiry = models.ForeignKey(MusicInquiry)
+    category = models.CharField(
+        max_length=20,
+        choices=(
+            ('Duplicate', 'Duplicate'),
+            ('Unethical', 'Unethical'),
+            ('Does not make sense', 'Does not make sense'),
+            ('Other', 'Other'),
+        )
+    )
+    comment = models.CharField(max_length=300, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('user', 'inquiry')
+
+    objects = InquiryProblemReportManager()

@@ -419,3 +419,41 @@ class testSuggestionVote(TestCase):
             suggestion=self.test_suggestion,
             modality='positive'
         )
+
+
+class testInquiryProblemReport(TestCase):
+
+    fixtures = [
+        'User.json',
+        'SongSuggestion.json',
+        'MusicInquiry.json',
+        'Song.json'
+    ]
+
+    def test_add_legal_report(self):
+        user = User.objects.get(id=3)
+        inquiry = MusicInquiry.objects.get(id=1)
+
+        InquiryProblemReport.objects.create_inquiry_report(
+            user=user, inquiry=inquiry, category='Duplicate'
+        )
+
+        self.assertTrue(InquiryProblemReport.objects.filter(
+            user=user, inquiry=inquiry).exists()
+        )
+
+    def test_user_add_2_reports_to_same_inquiry(self):
+        user = User.objects.get(id=3)
+        inquiry = MusicInquiry.objects.get(id=1)
+
+        InquiryProblemReport.objects.create_inquiry_report(
+            user=user, inquiry=inquiry, category='Duplicate'
+        )
+
+        self.assertRaises(
+            IntegrityError,
+            InquiryProblemReport.objects.create_inquiry_report,
+            user=user,
+            inquiry=inquiry,
+            category='Unethical'
+        )
