@@ -162,7 +162,7 @@ class testMusicInquiry(TestCase):
 
         MusicInquiry.objects.create_music_inquiry(user=user, text=text1)
         MusicInquiry.objects.create_music_inquiry(user=user, text=text2)
-        # Create a suggestion done three days ago. Should no be counted.
+        # Create a Inquiry done three days ago. Should not be counted.
         inquiry = MusicInquiry.objects.create_music_inquiry(
             user=user, text=text3
         )
@@ -307,7 +307,7 @@ class testSongSuggestion(TestCase):
             'https://www.youtube.com/watch?v=JdhhCCiIx40'
         )
 
-        # Create a suggestion done three days ago. Should no be counted.
+        # Create a suggestion done three days ago. Should not be counted.
         suggestion = SongSuggestion.objects.create(
             music_inquiry=inquiry2,
             user=user,
@@ -472,7 +472,7 @@ class testInquiryProblemReport(TestCase):
             user=user, inquiry=inquiry2, category='Unethical'
         )
 
-        # Create a report done three days ago. Should no be counted.
+        # Create a report done three days ago. Should not be counted.
         report = InquiryProblemReport.objects.create_inquiry_report(
             user=user, inquiry=inquiry3, category='Unethical'
         )

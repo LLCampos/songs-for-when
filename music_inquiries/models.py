@@ -58,7 +58,7 @@ class MusicInquiryManager(models.Manager):
     def create_music_inquiry(self, user, text):
 
         if self.number_inquiries_day(user) >= 5:
-            raise ValidationError('User can only make 10 suggestions per day')
+            raise ValidationError('User can only make 5 inquiries per day')
 
         music_inquiry = MusicInquiry(user=user, text=text)
         music_inquiry.clean_fields()
@@ -69,7 +69,7 @@ class MusicInquiryManager(models.Manager):
         return self.filter(text=inquiry_text).exists()
 
     def number_inquiries_day(self, user):
-        """Return number of Suggestions the User already added today."""
+        """Return number of Inquiries the User already added today."""
         time_24_hours_ago = timezone.now() - timezone.timedelta(days=1)
         return self.filter(user=user, created_at__gte=time_24_hours_ago).count()
 
