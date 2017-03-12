@@ -56,6 +56,10 @@ class Song(models.Model):
 
 class MusicInquiryManager(models.Manager):
     def create_music_inquiry(self, user, text):
+
+        if self.number_inquiries_day(user) >= 5:
+            raise ValidationError('User can only make 10 suggestions per day')
+
         music_inquiry = MusicInquiry(user=user, text=text)
         music_inquiry.clean_fields()
         music_inquiry.save()

@@ -175,6 +175,22 @@ class testMusicInquiry(TestCase):
             MusicInquiry.objects.number_inquiries_day(user)
         )
 
+    def test_add_more_than_5_inquiries_day(self):
+
+        user = User.objects.get(id=3)
+
+        for i in range(1, 6):
+            text = 'this the test text{}'.format(i)
+            MusicInquiry.objects.create_music_inquiry(user=user, text=text)
+
+        text = 'this the test text6'
+        self.assertRaises(
+            ValidationError,
+            MusicInquiry.objects.create_music_inquiry,
+            user=user,
+            text=text,
+        )
+
 
 class testSongSuggestion(TestCase):
 
