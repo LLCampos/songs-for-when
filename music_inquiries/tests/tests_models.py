@@ -71,6 +71,13 @@ class TestSongModel(TestCase):
 
 class testMusicInquiry(TestCase):
 
+    fixtures = [
+        'User.json',
+        'SongSuggestion.json',
+        'MusicInquiry.json',
+        'Song.json'
+    ]
+
     def setUp(self):
         self.user1 = User.objects.create_user('John')
         self.user2 = User.objects.create_user('Anna')
@@ -145,6 +152,28 @@ class testMusicInquiry(TestCase):
 
         does_exist = MusicInquiry.objects.does_music_inquiry_exist(inquiry_text)
         self.assertFalse(does_exist)
+
+    def test_count_inquiries_user_day(self):
+        user = User.objects.get(id=3)
+
+        text1 = 'this the test text1'
+        text2 = 'this the test text2'
+        text3 = 'this the test text3'
+
+        MusicInquiry.objects.create_music_inquiry(user=user, text=text1)
+        MusicInquiry.objects.create_music_inquiry(user=user, text=text2)
+        # Create a suggestion done three days ago. Should no be counted.
+        inquiry = MusicInquiry.objects.create_music_inquiry(
+            user=user, text=text3
+        )
+        MusicInquiry.objects.filter(id=inquiry.id).update(
+            created_at=timezone.now() - timezone.timedelta(days=3)
+        )
+
+        self.assertEqual(
+            2,
+            MusicInquiry.objects.number_inquiries_day(user)
+        )
 
 
 class testSongSuggestion(TestCase):
@@ -241,7 +270,7 @@ class testSongSuggestion(TestCase):
         self.assertEqual(2, suggestion.number_positive_votes())
         self.assertEqual(1, suggestion.number_negative_votes())
 
-    def test_count_suggestions_in_the_day(self):
+    def test_count_suggestions_user_day(self):
         user = User.objects.get(id=3)
         inquiry1 = MusicInquiry.objects.get(id=1)
         inquiry2 = MusicInquiry.objects.get(id=2)

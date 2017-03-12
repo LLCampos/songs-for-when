@@ -64,6 +64,11 @@ class MusicInquiryManager(models.Manager):
     def does_music_inquiry_exist(self, inquiry_text):
         return self.filter(text=inquiry_text).exists()
 
+    def number_inquiries_day(self, user):
+        """Return number of Suggestions the User already added today."""
+        time_24_hours_ago = timezone.now() - timezone.timedelta(days=1)
+        return self.filter(user=user, created_at__gte=time_24_hours_ago).count()
+
 
 class MusicInquiry(models.Model):
     user = models.ForeignKey(User)
