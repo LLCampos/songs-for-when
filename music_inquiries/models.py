@@ -195,6 +195,9 @@ class InquiryProblemReportManager(models.Manager):
 
     def create_inquiry_report(self, user, inquiry, category, comment=''):
 
+        if self.number_reports_day(user) >= 5:
+            raise ValidationError('User can only report 5 inquiries per day')
+
         inquiry = self.create(
             user=user,
             inquiry=inquiry,

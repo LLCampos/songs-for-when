@@ -484,3 +484,27 @@ class testInquiryProblemReport(TestCase):
             2,
             InquiryProblemReport.objects.number_reports_day(user)
         )
+
+    def test_add_more_than_5_suggestions_day(self):
+
+        user = User.objects.get(id=3)
+
+        for i in range(1, 6):
+
+            inquiry = MusicInquiry.objects.get(id=i)
+
+            InquiryProblemReport.objects.create_inquiry_report(
+                user=user,
+                inquiry=inquiry,
+                category='Unethical'
+            )
+
+        inquiry = MusicInquiry.objects.get(id=6)
+
+        self.assertRaises(
+            ValidationError,
+            InquiryProblemReport.objects.create_inquiry_report,
+            user=user,
+            inquiry=inquiry,
+            category='Unethical'
+        )
