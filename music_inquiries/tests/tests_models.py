@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.db import IntegrityError
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from music_inquiries.models import *
 
@@ -239,6 +240,42 @@ class testSongSuggestion(TestCase):
 
         self.assertEqual(2, suggestion.number_positive_votes())
         self.assertEqual(1, suggestion.number_negative_votes())
+
+    def test_count_suggestions_in_the_day(self):
+        user = User.objects.get(id=3)
+        inquiry1 = MusicInquiry.objects.get(id=1)
+        inquiry2 = MusicInquiry.objects.get(id=2)
+
+        SongSuggestion.objects.create_suggestion(
+            inquiry1,
+            user,
+            'artist1',
+            'song1',
+            'https://www.youtube.com/watch?v=brRmdqjn-g4'
+        )
+
+        SongSuggestion.objects.create_suggestion(
+            inquiry2,
+            user,
+            'artist2',
+            'song2',
+            'https://www.youtube.com/watch?v=JdhhCCiIx40'
+        )
+
+        # Create a suggestion done three days ago. Should no be counted.
+        suggestion = SongSuggestion.objects.create(
+            music_inquiry=inquiry2,
+            user=user,
+            song=Song.objects.get(id=1),
+        )
+        SongSuggestion.objects.filter(id=suggestion.id).update(
+            created_at=timezone.now() - timezone.timedelta(days=3)
+        )
+
+        self.assertEqual(
+            2,
+            SongSuggestion.objects.number_suggestions_day(user)
+        )
 
 
 class testSuggestionVote(TestCase):

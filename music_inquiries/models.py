@@ -6,7 +6,7 @@ from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.core.exceptions import ValidationError
 
 import urlparse
-# from datetime import date
+from django.utils import timezone
 
 
 class SongManager(models.Manager):
@@ -105,9 +105,10 @@ class SongSuggestionManager(models.Manager):
         )
         return suggestion
 
-    # def number_suggestions_day(self, user):
-    #     """Return number of Suggestions the User already added today."""
-    #     pass
+    def number_suggestions_day(self, user):
+        """Return number of Suggestions the User already added today."""
+        time_24_hours_ago = timezone.now() - timezone.timedelta(days=1)
+        return self.filter(user=user, created_at__gte=time_24_hours_ago).count()
 
 
 class SongSuggestion(models.Model):
