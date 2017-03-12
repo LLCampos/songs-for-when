@@ -195,6 +195,14 @@ class InquiryProblemReportManager(models.Manager):
 
     def create_inquiry_report(self, user, inquiry, category, comment=''):
 
+        legal_categories = map(
+            lambda choice: choice[0],
+            InquiryProblemReport.CATEGORY_CHOICES
+        )
+
+        if category not in legal_categories:
+            raise ValidationError('Category is not valid.')
+
         if self.number_reports_day(user) >= 5:
             raise ValidationError('User can only report 5 inquiries per day')
 
@@ -216,17 +224,16 @@ class InquiryProblemReportManager(models.Manager):
 
 class InquiryProblemReport(models.Model):
 
+    CATEGORY_CHOICES = (
+        ('Duplicate', 'Duplicate'),
+        ('Unethical', 'Unethical'),
+        ('Does not make sense', 'Does not make sense'),
+        ('Other', 'Other'),
+    )
+
     user = models.ForeignKey(User)
     inquiry = models.ForeignKey(MusicInquiry)
-    category = models.CharField(
-        max_length=20,
-        choices=(
-            ('Duplicate', 'Duplicate'),
-            ('Unethical', 'Unethical'),
-            ('Does not make sense', 'Does not make sense'),
-            ('Other', 'Other'),
-        )
-    )
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     comment = models.CharField(max_length=300, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

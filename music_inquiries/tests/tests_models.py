@@ -508,3 +508,15 @@ class testInquiryProblemReport(TestCase):
             inquiry=inquiry,
             category='Unethical'
         )
+
+    def test_make_report_with_ilegal_category(self):
+        user = User.objects.get(id=3)
+        inquiry = MusicInquiry.objects.get(id=1)
+
+        self.assertRaises(
+            ValidationError,
+            InquiryProblemReport.objects.create_inquiry_report,
+            user=user,
+            inquiry=inquiry,
+            category='Bananas'
+        )
