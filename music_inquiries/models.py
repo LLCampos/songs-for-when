@@ -204,6 +204,12 @@ class InquiryProblemReportManager(models.Manager):
 
         return inquiry
 
+    def number_reports_day(self, user):
+        """Return number of InquieryProblemReports the User already submitted
+        today."""
+        time_24_hours_ago = timezone.now() - timezone.timedelta(days=1)
+        return self.filter(user=user, created_at__gte=time_24_hours_ago).count()
+
 
 class InquiryProblemReport(models.Model):
 

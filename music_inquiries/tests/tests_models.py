@@ -457,3 +457,30 @@ class testInquiryProblemReport(TestCase):
             inquiry=inquiry,
             category='Unethical'
         )
+
+    def test_count_reports_user_day(self):
+        user = User.objects.get(id=3)
+        inquiry1 = MusicInquiry.objects.get(id=1)
+        inquiry2 = MusicInquiry.objects.get(id=2)
+        inquiry3 = MusicInquiry.objects.get(id=3)
+
+        InquiryProblemReport.objects.create_inquiry_report(
+            user=user, inquiry=inquiry1, category='Duplicate'
+        )
+
+        InquiryProblemReport.objects.create_inquiry_report(
+            user=user, inquiry=inquiry2, category='Unethical'
+        )
+
+        # Create a report done three days ago. Should no be counted.
+        report = InquiryProblemReport.objects.create_inquiry_report(
+            user=user, inquiry=inquiry3, category='Unethical'
+        )
+        InquiryProblemReport.objects.filter(id=report.id).update(
+            created_at=timezone.now() - timezone.timedelta(days=3)
+        )
+
+        self.assertEqual(
+            2,
+            InquiryProblemReport.objects.number_reports_day(user)
+        )
