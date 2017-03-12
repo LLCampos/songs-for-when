@@ -277,6 +277,30 @@ class testSongSuggestion(TestCase):
             SongSuggestion.objects.number_suggestions_day(user)
         )
 
+    def test_add_more_than_10_suggestions_day(self):
+
+        user = User.objects.get(id=3)
+        inquiry = MusicInquiry.objects.get(id=1)
+
+        for i in range(1, 11):
+            SongSuggestion.objects.create_suggestion(
+                music_inquiry=inquiry,
+                user=user,
+                artist_name='artist{}'.format(i),
+                song_name='song{}'.format(i),
+                youtube_url='https://www.youtube.com/watch?v=JCiIx4{}'.format(i)
+            )
+
+        self.assertRaises(
+            ValidationError,
+            SongSuggestion.objects.create_suggestion,
+            music_inquiry=inquiry,
+            user=user,
+            artist_name='artist11',
+            song_name='song11',
+            youtube_url='https://www.youtube.com/watch?v=JdhhCCiIx410'
+        )
+
 
 class testSuggestionVote(TestCase):
 
