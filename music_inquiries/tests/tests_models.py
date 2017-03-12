@@ -218,3 +218,77 @@ class testSongSuggestion(TestCase):
             song_name=song_name,
             youtube_url=youtube_url,
         )
+
+
+class testSuggestionVote(TestCase):
+
+    fixtures = [
+        'User.json',
+        'SongSuggestion.json',
+        'MusicInquiry.json',
+        'Song.json'
+    ]
+
+    def setUp(self):
+        self.test_user_1 = User.objects.get(id=1)
+        self.test_user_2 = User.objects.get(id=2)
+        self.test_suggestion = SongSuggestion.objects.get(id=1)
+
+    def test_create_legal_vote(self):
+
+        SuggestionVote.objects.create_vote(
+            user=self.test_user_1,
+            suggestion=self.test_suggestion,
+            modality='positive'
+        )
+
+        self.assertTrue(
+            SuggestionVote.objects.filter(
+                user=self.test_user_1,
+                suggestion=self.test_suggestion,
+            ).exists()
+        )
+
+    def test_create_vote_non_valid_modality(self):
+
+        self.assertRaises(
+            ValidationError,
+            SuggestionVote.objects.create_vote,
+            user=self.test_user_1,
+            suggestion=self.test_suggestion,
+            modality='neutral'
+        )
+
+        self.assertFalse(
+            SuggestionVote.objects.filter(
+                user=self.test_user_1,
+                suggestion=self.test_suggestion,
+            ).exists()
+        )
+
+    def test_user_vote_two_times_same_suggestion(self):
+
+        SuggestionVote.objects.create_vote(
+            user=self.test_user_1,
+            suggestion=self.test_suggestion,
+            modality='positive'
+        )
+
+        self.assertRaises(
+            IntegrityError,
+            SuggestionVote.objects.create_vote,
+            user=self.test_user_1,
+            suggestion=self.test_suggestion,
+            modality='positive'
+        )
+
+    def test_user_vote_her_own_suggestion(self):
+        """User can't vote her own suggestion;"""
+
+        self.assertRaises(
+            ValidationError,
+            SuggestionVote.objects.create_vote,
+            user=self.test_user_2,
+            suggestion=self.test_suggestion,
+            modality='positive'
+        )

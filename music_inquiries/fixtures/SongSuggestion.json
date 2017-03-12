@@ -1,0 +1,12 @@
+[
+{
+    "model": "music_inquiries.songsuggestion",
+    "pk": 1,
+    "fields": {
+        "user": 2,
+        "song": 1,
+        "music_inquiry": 1,
+        "created_at": "2017-03-12T15:22:04.096Z"
+    }
+}
+]

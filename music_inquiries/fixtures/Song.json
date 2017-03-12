@@ -1,0 +1,11 @@
+[
+{
+    "model": "music_inquiries.song",
+    "pk": 1,
+    "fields": {
+        "artist_name": "Son Lux",
+        "song_name": "Easy",
+        "youtube_url": "https://www.youtube.com/embed/8PIPyPMNnp8"
+    }
+}
+]

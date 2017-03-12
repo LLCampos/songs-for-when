@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator, MaxLengthValidator
+from django.core.exceptions import ValidationError
 
 import urlparse
 
@@ -114,3 +115,31 @@ class SongSuggestion(models.Model):
 
     def __str__(self):
         return self.song.__str__()
+
+
+class SuggestionVoteManager(models.Manager):
+
+    def create_vote(self, user, suggestion, modality):
+
+        if modality not in ['positive', 'negative']:
+            raise ValidationError('modality must be "positive" or "negative".')
+
+        if user.id == suggestion.user.id:
+            raise ValidationError('User can\'t vote in her own Suggestion.')
+
+        self.create(user=user, suggestion=suggestion, modality=modality)
+
+
+class SuggestionVote(models.Model):
+
+    user = models.ForeignKey(User)
+    suggestion = models.ForeignKey(SongSuggestion)
+    modality = models.CharField(
+        max_length=8,
+        choices=(('positive', 'positive'), ('negative', 'negative'))
+    )
+
+    class Meta:
+        unique_together = ('user', 'suggestion',)
+
+    objects = SuggestionVoteManager()
