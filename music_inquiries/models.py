@@ -6,6 +6,7 @@ from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.core.exceptions import ValidationError
 
 import urlparse
+# from datetime import date
 
 
 class SongManager(models.Manager):
@@ -41,6 +42,8 @@ class Song(models.Model):
     artist_name = models.CharField(max_length=100)
     song_name = models.CharField(max_length=100)
     youtube_url = models.URLField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ('song_name', 'artist_name',)
@@ -70,6 +73,7 @@ class MusicInquiry(models.Model):
         validators=[MinLengthValidator(10), MaxLengthValidator(80)]
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = MusicInquiryManager()
 
@@ -101,12 +105,17 @@ class SongSuggestionManager(models.Manager):
         )
         return suggestion
 
+    # def number_suggestions_day(self, user):
+    #     """Return number of Suggestions the User already added today."""
+    #     pass
+
 
 class SongSuggestion(models.Model):
     user = models.ForeignKey(User)
     song = models.ForeignKey(Song)
     music_inquiry = models.ForeignKey(MusicInquiry)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ('song', 'music_inquiry',)
@@ -160,6 +169,8 @@ class SuggestionVote(models.Model):
         max_length=8,
         choices=(('positive', 'positive'), ('negative', 'negative'))
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ('user', 'suggestion',)
