@@ -9,5 +9,16 @@
         "created_at": "2017-03-11T15:22:04.096Z",
         "updated_at": "2017-03-11T15:22:04.096Z"
     }
+},
+{
+    "model": "music_inquiries.songsuggestion",
+    "pk": 2,
+    "fields": {
+        "user": 1,
+        "song": 2,
+        "music_inquiry": 1,
+        "created_at": "2017-03-11T15:22:04.096Z",
+        "updated_at": "2017-03-11T15:22:04.096Z"
+    }
 }
 ]

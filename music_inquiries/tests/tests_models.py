@@ -191,6 +191,58 @@ class testMusicInquiry(TestCase):
             text=text,
         )
 
+    def test_get_active_suggestions(self):
+        user1 = User.objects.get(id=1)
+        user2 = User.objects.get(id=2)
+        user3 = User.objects.get(id=3)
+        user4 = User.objects.get(id=4)
+        user5 = User.objects.get(id=5)
+        user6 = User.objects.get(id=6)
+        user7 = User.objects.get(id=7)
+        user8 = User.objects.get(id=8)
+
+        inquiry = MusicInquiry.objects.create_music_inquiry(
+            user=user1,
+            text='this is an amazing inquiry!!'
+        )
+
+        suggestion1 = SongSuggestion.objects.create_suggestion(
+            music_inquiry=inquiry,
+            user=user1,
+            artist_name='artist1',
+            song_name='name1',
+            youtube_url='https://www.youtube.com/watch?v=twexpvBDAcI',
+        )
+
+        suggestion1.add_vote(user2, 'positive')
+        suggestion1.add_vote(user3, 'negative')
+
+        active_suggestions1 = inquiry.get_active_suggestions()
+        self.assertEqual(1, len(active_suggestions1))
+
+        suggestion2 = SongSuggestion.objects.create_suggestion(
+            music_inquiry=inquiry,
+            user=user2,
+            artist_name='artist2',
+            song_name='name2',
+            youtube_url='https://www.youtube.com/watch?v=twexpvBDAcI',
+        )
+
+        suggestion2.add_vote(user1, 'negative')
+        suggestion2.add_vote(user3, 'negative')
+        suggestion2.add_vote(user4, 'negative')
+        suggestion2.add_vote(user5, 'negative')
+        suggestion2.add_vote(user6, 'negative')
+        suggestion2.add_vote(user7, 'positive')
+
+        active_suggestions2 = inquiry.get_active_suggestions()
+        self.assertEqual(2, len(active_suggestions2))
+
+        suggestion2.add_vote(user8, 'negative')
+
+        active_suggestions3 = inquiry.get_active_suggestions()
+        self.assertEqual(1, len(active_suggestions3))
+
 
 class testSongSuggestion(TestCase):
 

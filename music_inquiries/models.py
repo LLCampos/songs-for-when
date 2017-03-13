@@ -86,6 +86,17 @@ class MusicInquiry(models.Model):
 
     objects = MusicInquiryManager()
 
+    def get_active_suggestions(self):
+        """Returns the suggestions done for this inquiry for which:
+            number positive votes - number negative votes > -5 """
+
+        all_suggestions = SongSuggestion.objects.filter(music_inquiry=self)
+        active_suggestions = filter(
+            lambda suggestion: suggestion.is_valid(),
+            all_suggestions
+        )
+        return active_suggestions
+
     def __str__(self):
         return self.text
 
@@ -152,6 +163,14 @@ class SongSuggestion(models.Model):
 
     def number_negative_votes(self):
         return self._number_votes('negative')
+
+    def is_valid(self):
+        """Returns True if:
+        number positive votes - number negative votes > -5 """
+
+        if self.number_positive_votes() - self.number_negative_votes() > -5:
+            return True
+        return False
 
     def __str__(self):
         return self.song.__str__()

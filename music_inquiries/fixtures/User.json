@@ -70,5 +70,77 @@
         "groups": [],
         "user_permissions": []
     }
+},
+{
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$30000$3wI29x6F3RRl$LCLDtwX71QzPsfUb7drGjAmUlADjFk3eQWRXntJPqZ4=",
+        "last_login": "2017-03-05T20:03:03.741Z",
+        "is_superuser": false,
+        "username": "JoanS",
+        "first_name": "Joan",
+        "last_name": "S",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2017-03-01T15:04:48Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$30000$3wI29x6F3RRl$LCLDtwX71QzPsfUb7drGjAmUlADjFk3eQWRXntJPqZ4=",
+        "last_login": "2017-03-05T20:03:03.741Z",
+        "is_superuser": false,
+        "username": "PaulaV",
+        "first_name": "Paula",
+        "last_name": "V",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2017-03-01T15:04:48Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 7,
+    "fields": {
+        "password": "pbkdf2_sha256$30000$3wI29x6F3RRl$LCLDtwX71QzPsfUb7drGjAmUlADjFk3eQWRXntJPqZ4=",
+        "last_login": "2017-03-05T20:03:03.741Z",
+        "is_superuser": false,
+        "username": "MariaG",
+        "first_name": "Maria",
+        "last_name": "G",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2017-03-01T15:04:48Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 8,
+    "fields": {
+        "password": "pbkdf2_sha256$30000$3wI29x6F3RRl$LCLDtwX71QzPsfUb7drGjAmUlADjFk3eQWRXntJPqZ4=",
+        "last_login": "2017-03-05T20:03:03.741Z",
+        "is_superuser": false,
+        "username": "EduardL",
+        "first_name": "Eduard",
+        "last_name": "L",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2017-03-01T15:04:48Z",
+        "groups": [],
+        "user_permissions": []
+    }
 }
 ]
