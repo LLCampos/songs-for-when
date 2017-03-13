@@ -3,9 +3,13 @@ from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
-
+from django.core.urlresolvers import reverse
 
 from models import MusicInquiry, SongSuggestion
+
+from haystack.query import SearchQuerySet
+
+import json
 
 
 def index(request):
@@ -94,3 +98,31 @@ def suggestion(request, inquiry_id):
         suggestion.save()
 
         return inquiry(request, inquiry_id)
+
+
+def inquiry_search(request):
+    """Returns a JSON containing information about similar Inquiries to the one
+    send in the 'q' property."""
+
+    if request.method == 'GET':
+
+        query = request.GET['q']
+        results = SearchQuerySet().filter(content=query)
+        results_objects = map(lambda result: result.object, results)
+
+        results_dicts = []
+
+        for result in results_objects:
+            result_dict = {}
+
+            result_dict['url'] = reverse(
+                'music_inquiries:inquiry',
+                kwargs={'inquiry_id': result.id}
+            )
+            result_dict['text'] = result.text
+
+            results_dicts.append(result_dict)
+
+        results_json = json.dumps(results_dicts)
+
+        return HttpResponse(results_json, content_type='application/json')

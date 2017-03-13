@@ -231,3 +231,17 @@ class TestsInquiryView(TestCase):
         ))
 
         self.assertEqual(200, response.status_code)
+
+
+class TestsInquirySearchView(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_page_ok(self):
+        response = self.client.get(
+            reverse('music_inquiries:inquiry_search'),
+            {'q': 'test'}
+        )
+
+        self.assertEqual(200, response.status_code)
