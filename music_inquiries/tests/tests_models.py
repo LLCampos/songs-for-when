@@ -192,6 +192,8 @@ class testMusicInquiry(TestCase):
         )
 
     def test_get_active_suggestions(self):
+        """Tests get_active_suggestions and get_number_active_suggestions"""
+
         user1 = User.objects.get(id=1)
         user2 = User.objects.get(id=2)
         user3 = User.objects.get(id=3)
@@ -217,8 +219,7 @@ class testMusicInquiry(TestCase):
         suggestion1.add_vote(user2, 'positive')
         suggestion1.add_vote(user3, 'negative')
 
-        active_suggestions1 = inquiry.get_active_suggestions()
-        self.assertEqual(1, len(active_suggestions1))
+        self.assertEqual(1, inquiry.get_number_active_suggestions())
 
         suggestion2 = SongSuggestion.objects.create_suggestion(
             music_inquiry=inquiry,
@@ -235,13 +236,11 @@ class testMusicInquiry(TestCase):
         suggestion2.add_vote(user6, 'negative')
         suggestion2.add_vote(user7, 'positive')
 
-        active_suggestions2 = inquiry.get_active_suggestions()
-        self.assertEqual(2, len(active_suggestions2))
+        self.assertEqual(2, inquiry.get_number_active_suggestions())
 
         suggestion2.add_vote(user8, 'negative')
 
-        active_suggestions3 = inquiry.get_active_suggestions()
-        self.assertEqual(1, len(active_suggestions3))
+        self.assertEqual(1, inquiry.get_number_active_suggestions())
 
 
 class testSongSuggestion(TestCase):

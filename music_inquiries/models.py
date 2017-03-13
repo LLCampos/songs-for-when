@@ -97,6 +97,9 @@ class MusicInquiry(models.Model):
         )
         return active_suggestions
 
+    def get_number_active_suggestions(self):
+        return len(self.get_active_suggestions())
+
     def __str__(self):
         return self.text
 
