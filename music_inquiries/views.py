@@ -120,6 +120,7 @@ def inquiry_search(request):
                 kwargs={'inquiry_id': result.id}
             )
             result_dict['text'] = result.text
+            result_dict['number_of_suggestions'] = result.get_number_active_suggestions()
 
             results_dicts.append(result_dict)
 
