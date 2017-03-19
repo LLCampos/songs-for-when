@@ -43,7 +43,7 @@
       <div class="modal-body">
         <form action="{% url 'music_inquiries:suggestion' inquiry.id %}" method="post" id="submit-suggestion-form">
           {% csrf_token %}
-          <input type="text" placeholder="Song Artist" name="song_artist"/>
+          <input type="text" placeholder="Song Artist" name="artist_name"/>
           <input type="text" placeholder="Song Name" name="song_name"/>
           <input type="text" placeholder="Youtube URL" name="youtube_url"/>
           <input type="submit" value="Submit">
