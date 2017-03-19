@@ -116,22 +116,28 @@ def suggestion(request, inquiry_id):
     if request.method == 'POST':
         try:
             song_name = request.POST['song_name']
-            song_artist = request.POST['song_artist']
+            artist_name = request.POST['artist_name']
             youtube_url = request.POST['youtube_url']
         except(KeyError):
             raise Http404(
                 "Some of the requires parameters was not sent in the request."
             )
 
-        SongSuggestion.objects.create_suggestion(
-            user=request.user,
-            music_inquiry=music_inquiry,
-            song_name=song_name,
-            song_artist=song_artist,
-            youtube_url=youtube_url,
-        )
+        try:
+            SongSuggestion.objects.create_suggestion(
+                user=request.user,
+                music_inquiry=music_inquiry,
+                song_name=song_name,
+                artist_name=artist_name,
+                youtube_url=youtube_url,
+            )
+        except Exception(IntegrityError, ValidationError):
+            return HttpResponse(
+                'Error when adding adding suggestion',
+                status=400
+            )
 
-        return inquiry(request, inquiry_id)
+        return HttpResponse(status=200)
 
 
 def inquiry_search(request):
