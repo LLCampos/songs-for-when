@@ -274,6 +274,21 @@ class TestSuggestionView(TestCase):
 
         self.assertEqual(200, response.status_code)
 
+    def test_add_suggestion_without_auth(self):
+
+        song_name = 'test song'
+        artist_name = 'test artist'
+        youtube_url = 'https://www.youtube.com/watch?v=znHpyf1Lolo'
+
+        response = self.client.post(
+            reverse('music_inquiries:suggestion', kwargs={'inquiry_id': 4}),
+            {'song_name': song_name,
+             'artist_name': artist_name,
+             'youtube_url': youtube_url}
+        )
+
+        self.assertEqual(302, response.status_code)
+
 
 class TestsInquirySearchView(TestCase):
 
