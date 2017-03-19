@@ -17,6 +17,26 @@ def index(request):
 
 
 def inquiries_listing(request):
+    """
+    Endpoint at /inquiry/
+
+    GET:
+        Returns HTML page with listing of the inquiries.
+
+    POST:
+        Creates a new Inquiry. If everything ok, returns HTML page with listing
+        of the inquiries. Authentication is required.
+
+        Parameters:
+            inquiry_text
+
+    HEAD:
+        Returns status code 200 if text sent in the 'q' (for query) parameter
+        was already submitted in some Inquiry.
+
+        Parameters:
+            q
+    """
 
     if request.method == 'HEAD':
         """Method used to check if a certain inquiry text was already
@@ -60,6 +80,12 @@ def inquiries_listing(request):
 
 
 def inquiry(request, inquiry_id):
+    """Endpoint at /inquiry/{inquiry_id}/
+
+    GET:
+        Returns HTML page with info on the Inquiry.
+
+    """
 
     inquiry = get_object_or_404(MusicInquiry, pk=inquiry_id)
     suggestions = SongSuggestion.objects.filter(music_inquiry=inquiry_id)
@@ -74,6 +100,16 @@ def inquiry(request, inquiry_id):
 
 @login_required
 def suggestion(request, inquiry_id):
+    """Endpoint at /inquiry/{inquiry_id}/suggestion
+
+    POST:
+        Submits a new Suggestion to the Inquiry (Auth required);
+
+        Parameters:
+            'song_name'
+            'song_artist'
+            'youtube_url'
+    """
 
     music_inquiry = get_object_or_404(MusicInquiry, pk=inquiry_id)
 
@@ -87,7 +123,7 @@ def suggestion(request, inquiry_id):
                 "Some of the requires parameters was not sent in the request."
             )
 
-        suggestion = SongSuggestion.objects.create_suggestion(
+        SongSuggestion.objects.create_suggestion(
             user=request.user,
             music_inquiry=music_inquiry,
             song_name=song_name,
@@ -95,14 +131,20 @@ def suggestion(request, inquiry_id):
             youtube_url=youtube_url,
         )
 
-        suggestion.save()
-
         return inquiry(request, inquiry_id)
 
 
 def inquiry_search(request):
-    """Returns a JSON containing information about similar Inquiries to the one
-    send in the 'q' property."""
+
+    """Endpoint at /search/
+
+    GET:
+        Returns a JSON containing information about similar Inquiries to the one
+        send in the 'q' property.
+
+        Parameters:
+            'q'
+    """
 
     if request.method == 'GET':
 
