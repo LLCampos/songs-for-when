@@ -120,7 +120,7 @@ def suggestion(request, inquiry_id):
             youtube_url = request.POST.get('youtube_url')
         except(KeyError):
             raise Http404(
-                "Some of the requires parameters was not sent in the request."
+                "Some of the required parameters was not sent in the request."
             )
 
         try:
@@ -133,7 +133,7 @@ def suggestion(request, inquiry_id):
             )
         except Exception(IntegrityError, ValidationError):
             return HttpResponse(
-                'Error when adding adding suggestion',
+                'Error when adding suggestion',
                 status=400
             )
 
