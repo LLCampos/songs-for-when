@@ -330,3 +330,54 @@ class TestSongView(TestCase):
         )
 
         self.assertEqual(404, response.status_code)
+
+
+class TestInquiryReportView(TestCase):
+
+    fixtures = ['User.json', 'MusicInquiry.json']
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_add_complete_report(self):
+
+        self.client.login(username=USER1_NAME, password=USER1_PASS)
+
+        response = self.client.post(
+            reverse('music_inquiries:inquiry_report', kwargs={'inquiry_id': 3}),
+            {'category': 'Duplicate',
+             'comment': 'a cool comment'}
+        )
+
+        self.assertEqual(200, response.status_code)
+
+    def test_add_report_without_comment(self):
+
+        self.client.login(username=USER1_NAME, password=USER1_PASS)
+
+        response = self.client.post(
+            reverse('music_inquiries:inquiry_report', kwargs={'inquiry_id': 3}),
+            {'category': 'Duplicate'}
+        )
+
+        self.assertEqual(200, response.status_code)
+
+    def test_add_report_with_non_valid_category(self):
+        self.client.login(username=USER1_NAME, password=USER1_PASS)
+
+        response = self.client.post(
+            reverse('music_inquiries:inquiry_report', kwargs={'inquiry_id': 3}),
+            {'category': 'Bananas'}
+        )
+
+        self.assertEqual(400, response.status_code)
+
+    def test_add_report_no_auth(self):
+
+        response = self.client.post(
+            reverse('music_inquiries:inquiry_report', kwargs={'inquiry_id': 3}),
+            {'category': 'Duplicate',
+             'comment': 'a cool comment'}
+        )
+
+        self.assertEqual(302, response.status_code)

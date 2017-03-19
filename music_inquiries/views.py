@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 
-from models import MusicInquiry, SongSuggestion, Song
+from models import *
 
 from haystack.query import SearchQuerySet
 
@@ -210,3 +210,40 @@ def song(request):
             return HttpResponse(status=200)
         else:
             return HttpResponse(status=404)
+
+
+@login_required
+def inquiry_report(request, inquiry_id):
+
+    """Endpoint at /inquiry/{inquiry_id}/report/
+
+    POST:
+        Reports something wrong with an Inquiry
+
+        Parameters:
+            category
+            comment
+    """
+
+    try:
+        category = request.POST['category']
+        comment = request.POST.get('comment')
+    except KeyError:
+        raise Http404(
+            "Some of the required parameters was not sent in the request."
+        )
+
+    try:
+        InquiryProblemReport.objects.create_inquiry_report(
+            user=request.user,
+            inquiry=MusicInquiry.objects.get(id=inquiry_id),
+            category=category,
+            comment=comment,
+        )
+    except (IntegrityError, ValidationError):
+        return HttpResponse(
+            'Error when submitting report',
+            status=400
+        )
+
+    return HttpResponse(status=200)
