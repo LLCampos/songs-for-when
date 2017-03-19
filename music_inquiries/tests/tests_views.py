@@ -302,3 +302,31 @@ class TestsInquirySearchView(TestCase):
         )
 
         self.assertEqual(200, response.status_code)
+
+
+class TestSongView(TestCase):
+
+    fixtures = ['Song.json']
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_check_if_existent_song_exists(self):
+
+        response = self.client.head(
+            reverse('music_inquiries:song'),
+            {'song_name': 'Easy',
+             'artist_name': 'Son Lux'}
+        )
+
+        self.assertEqual(200, response.status_code)
+
+    def test_check_if_non_existent_song_exists(self):
+
+        response = self.client.head(
+            reverse('music_inquiries:song'),
+            {'song_name': 'asdfsadfsadf',
+             'artist_name': 'Son asdfsadfsadf'}
+        )
+
+        self.assertEqual(404, response.status_code)

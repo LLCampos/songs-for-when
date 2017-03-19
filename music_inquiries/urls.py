@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^inquiry/(?P<inquiry_id>[0-9]+)/suggestion', views.suggestion, name='suggestion'),
     url(r'^inquiry/(?P<inquiry_id>[0-9]+)/$', views.inquiry, name='inquiry'),
     url(r'^inquiry/search/$', views.inquiry_search, name='inquiry_search'),
+    url(r'^song/$', views.song, name='song'),
 ]
