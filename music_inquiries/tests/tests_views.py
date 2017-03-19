@@ -3,11 +3,14 @@ from django.core.urlresolvers import reverse
 
 from selenium import webdriver
 
-from music_inquiries.models import MusicInquiry
+from music_inquiries.models import *
 
 HOST = 'http://localhost:8000'
 INQUIRIES_LISTING_URL = reverse('music_inquiries:inquiries_listing')
 INDEX_URL = reverse('music_inquiries:index')
+
+USER1_NAME = 'JonSnow'
+USER1_PASS = 'iknownothing'
 
 
 def login_user(driver, username, password):
@@ -31,9 +34,6 @@ class TestsIndexView(TransactionTestCase):
     def setUp(self):
         self.client = Client()
         self.driver = webdriver.Chrome()
-
-        self.test_username = 'JonSnow'
-        self.test_password = 'iknownothing'
 
     def tearDown(self):
         self.driver.quit()
@@ -62,7 +62,7 @@ class TestsIndexView(TransactionTestCase):
     def test_submit_no_min_length(self):
 
         self.driver.get(HOST + INDEX_URL)
-        login_user(self.driver, self.test_username, self.test_password)
+        login_user(self.driver, USER1_NAME, USER1_PASS)
 
         inquiry_input = self.driver.find_element_by_name('inquiry_text')
         inquiry_input.send_keys('test')
@@ -81,7 +81,7 @@ class TestsIndexView(TransactionTestCase):
         one space)"""
 
         self.driver.get(HOST + INDEX_URL)
-        login_user(self.driver, self.test_username, self.test_password)
+        login_user(self.driver, USER1_NAME, USER1_PASS)
 
         inquiry_input = self.driver.find_element_by_name('inquiry_text')
         inquiry_input.send_keys('      a       ')
@@ -98,7 +98,7 @@ class TestsIndexView(TransactionTestCase):
     # def test_submit_legal_inquiry(self):
 
     #     self.driver.get(HOST + INDEX_URL)
-    #     login_user(self.driver, self.test_username, self.test_password)
+    #     login_user(self.driver, USER1_NAME, USER1_PASS)
 
     #     inquiry_input = self.driver.find_element_by_name('inquiry_text')
     #     inquiry_input.send_keys('Definitely more than enough characters.')
@@ -114,9 +114,6 @@ class TestsInquiriesListingView(TestCase):
 
     def setUp(self):
         self.client = Client()
-
-        self.test_username = 'JonSnow'
-        self.test_password = 'iknownothing'
 
     def test_page_ok(self):
         response = self.client.get(INQUIRIES_LISTING_URL)
@@ -134,8 +131,8 @@ class TestsInquiriesListingView(TestCase):
         request should return an error"""
 
         self.client.login(
-            username=self.test_username,
-            password=self.test_password
+            username=USER1_NAME,
+            password=USER1_PASS
         )
         response = self.client.post(
             INQUIRIES_LISTING_URL,
@@ -147,8 +144,8 @@ class TestsInquiriesListingView(TestCase):
         number_inquiries_before = len(MusicInquiry.objects.all())
 
         self.client.login(
-            username=self.test_username,
-            password=self.test_password
+            username=USER1_NAME,
+            password=USER1_PASS
         )
         response = self.client.post(
             INQUIRIES_LISTING_URL,
@@ -187,8 +184,8 @@ class TestsInquiriesListingView(TestCase):
         inquiry_text = 'short'
 
         self.client.login(
-            username=self.test_username,
-            password=self.test_password
+            username=USER1_NAME,
+            password=USER1_PASS
         )
 
         response = self.client.post(
@@ -205,8 +202,8 @@ class TestsInquiriesListingView(TestCase):
                         'this should have more than 80 chars.')
 
         self.client.login(
-            username=self.test_username,
-            password=self.test_password
+            username=USER1_NAME,
+            password=USER1_PASS
         )
 
         response = self.client.post(
@@ -229,6 +226,36 @@ class TestsInquiryView(TestCase):
             'music_inquiries:inquiry',
             kwargs={'inquiry_id': '1'}
         ))
+
+        self.assertEqual(200, response.status_code)
+
+
+class TestSuggestionView(TestCase):
+
+    fixtures = [
+        'User.json',
+        'MusicInquiry.json',
+        'SongSuggestion.json',
+        'Song.json'
+    ]
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_add_suggestion_non_existent_song_with_youtube_url(self):
+
+        self.client.login(username=USER1_NAME, password=USER1_PASS)
+
+        song_name = 'test song'
+        artist_name = 'test artist'
+        youtube_url = 'https://www.youtube.com/watch?v=znHpyf1Lolo'
+
+        response = self.client.post(
+            reverse('music_inquiries:suggestion', kwargs={'inquiry_id': 4}),
+            {'song_name': song_name,
+             'artist_name': artist_name,
+             'youtube_url': youtube_url}
+        )
 
         self.assertEqual(200, response.status_code)
 
