@@ -215,7 +215,7 @@ class SuggestionVote(models.Model):
 
 class InquiryProblemReportManager(models.Manager):
 
-    def create_inquiry_report(self, user, inquiry, category, comment=''):
+    def create_inquiry_report(self, user, inquiry, category, comment=None):
 
         legal_categories = map(
             lambda choice: choice[0],
@@ -256,7 +256,7 @@ class InquiryProblemReport(models.Model):
     user = models.ForeignKey(User)
     inquiry = models.ForeignKey(MusicInquiry)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
-    comment = models.CharField(max_length=300, default='')
+    comment = models.CharField(max_length=300, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
