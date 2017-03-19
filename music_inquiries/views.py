@@ -117,7 +117,7 @@ def suggestion(request, inquiry_id):
         try:
             song_name = request.POST['song_name']
             artist_name = request.POST['artist_name']
-            youtube_url = request.POST['youtube_url']
+            youtube_url = request.POST.get('youtube_url')
         except(KeyError):
             raise Http404(
                 "Some of the requires parameters was not sent in the request."

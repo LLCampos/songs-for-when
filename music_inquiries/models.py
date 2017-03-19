@@ -107,7 +107,7 @@ class MusicInquiry(models.Model):
 class SongSuggestionManager(models.Manager):
 
     def create_suggestion(self, music_inquiry, user,
-                          artist_name, song_name, youtube_url=False):
+                          artist_name, song_name, youtube_url=None):
 
         if self.number_suggestions_day(user) >= 10:
             raise ValidationError('User can only make 10 suggestions per day')
