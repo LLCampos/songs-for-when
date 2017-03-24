@@ -381,3 +381,22 @@ class TestInquiryReportView(TestCase):
         )
 
         self.assertEqual(302, response.status_code)
+
+
+# class TestSuggestionVoteView(Test.Case):
+
+#     fixtures = [
+#         'User.json',
+#         'SongSuggestion.json',
+#         'MusicInquiry.json',
+#         'Song.json'
+#     ]
+
+#     def setUp(self):
+#         self.client = Client()
+
+#     def test_vote_endpoint_ok(self):
+
+#         self.client.login(username=USER1_NAME, password=USER1_PASS)
+#         inquiry_id = 1
+#         suggestion_id = 1
