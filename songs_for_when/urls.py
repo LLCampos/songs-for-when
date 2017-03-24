@@ -15,10 +15,21 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from tastypie.api import Api
+
+from music_inquiries.internal_api import SongSuggestionResource, MusicInquiryResource, UserResource
+
+v1_api = Api(api_name='v1')
+v1_api.register(SongSuggestionResource())
+v1_api.register(MusicInquiryResource())
+v1_api.register(UserResource())
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('music_inquiries.urls')),
     url("^soc/", include("social_django.urls", namespace="social")),
     url('^accounts/', include('django.contrib.auth.urls')),
+
+    url(r'^api/', include(v1_api.urls)),
+
 ]
