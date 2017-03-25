@@ -17,63 +17,6 @@ def index(request):
 
 
 def inquiries_listing(request):
-    """
-    Endpoint at /inquiry/
-
-    GET:
-        Returns HTML page with listing of the inquiries.
-
-    POST:
-        Creates a new Inquiry. If everything ok, returns HTML page with listing
-        of the inquiries. Authentication is required.
-
-        Parameters:
-            inquiry_text
-
-    HEAD:
-        Returns status code 200 if text sent in the 'q' (for query) parameter
-        was already submitted in some Inquiry.
-
-        Parameters:
-            q
-    """
-
-    if request.method == 'HEAD':
-        """Method used to check if a certain inquiry text was already
-        submitted"""
-
-        query = request.GET['q']
-
-        if MusicInquiry.objects.does_music_inquiry_exist(query):
-            return HttpResponse(status=200)
-        else:
-            return HttpResponse(status=404)
-
-    elif request.method == 'POST':
-
-        if request.user.is_authenticated():
-            try:
-                inquiry_text = request.POST['inquiry_text']
-            except(KeyError):
-                raise Http404(
-                    "'inquiry_text' parameter was not sent in the request."
-                )
-
-            try:
-                MusicInquiry.objects.create_music_inquiry(
-                    user=request.user,
-                    text=inquiry_text
-                )
-
-            except(IntegrityError, ValidationError):
-                return HttpResponse(
-                    'Error when adding inquiry to database',
-                    status=400
-                )
-
-        else:
-            return HttpResponse('Unauthorized', status=401)
-
     latest_inquiries = MusicInquiry.objects.order_by('-created_at')[:15]
     context = {'inquiries': latest_inquiries}
     return render(request, 'music_inquiries/inquiries_listing.html', context)
@@ -247,3 +190,66 @@ def inquiry_report(request, inquiry_id):
         )
 
     return HttpResponse(status=200)
+
+
+def inquiry_resource(request):
+
+    """
+    Endpoint at iapi/inquiry/
+
+    POST:
+        Creates a new Inquiry. If everything ok, returns HTML page with listing
+        of the inquiries. Authentication is required.
+
+        Parameters:
+            inquiry_text
+
+    HEAD:
+        Returns status code 200 if text sent in the 'q' (for query) parameter
+        was already submitted in some Inquiry.
+
+        Parameters:
+            q
+    """
+
+    if request.method == 'HEAD':
+        """Method used to check if a certain inquiry text was already
+        submitted"""
+
+        query = request.GET['q']
+
+        if MusicInquiry.objects.does_music_inquiry_exist(query):
+            return HttpResponse(status=200)
+        else:
+            return HttpResponse(status=404)
+
+    elif request.method == 'POST':
+
+        if request.user.is_authenticated():
+            try:
+                inquiry_text = request.POST['inquiry_text']
+            except(KeyError):
+                raise HttpResponse(
+                    "'inquiry_text' parameter was not sent in the request.",
+                    status=400
+                )
+
+            try:
+                MusicInquiry.objects.create_music_inquiry(
+                    user=request.user,
+                    text=inquiry_text
+                )
+
+            except(IntegrityError, ValidationError):
+                return HttpResponse(
+                    'Error when adding inquiry to database',
+                    status=400
+                )
+
+            return HttpResponse(status=201)
+
+        else:
+            return HttpResponse('Unauthorized', status=401)
+
+    else:
+        return HttpResponse('Unauthorized', status=405)

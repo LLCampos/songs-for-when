@@ -6,7 +6,6 @@ from selenium import webdriver
 from music_inquiries.models import *
 
 HOST = 'http://localhost:8000'
-INQUIRIES_LISTING_URL = reverse('music_inquiries:inquiries_listing')
 INDEX_URL = reverse('music_inquiries:index')
 
 USER1_NAME = 'JonSnow'
@@ -116,102 +115,8 @@ class TestsInquiriesListingView(TestCase):
         self.client = Client()
 
     def test_page_ok(self):
-        response = self.client.get(INQUIRIES_LISTING_URL)
+        response = self.client.get(reverse('music_inquiries:inquiries_listing'))
         self.assertEqual(200, response.status_code)
-
-    def test_post_not_auth(self):
-        response = self.client.post(
-            INQUIRIES_LISTING_URL,
-            {'inquiry_text': 'test'}
-        )
-        self.assertEqual(401, response.status_code)
-
-    def test_post_repeated_inquiry(self):
-        """Inquiry text being sent is equal to the one the fixture, so the POST
-        request should return an error"""
-
-        self.client.login(
-            username=USER1_NAME,
-            password=USER1_PASS
-        )
-        response = self.client.post(
-            INQUIRIES_LISTING_URL,
-            {'inquiry_text': 'test inquiry'}
-        )
-        self.assertEqual(400, response.status_code)
-
-    def test_post_ok_inquiry(self):
-        number_inquiries_before = len(MusicInquiry.objects.all())
-
-        self.client.login(
-            username=USER1_NAME,
-            password=USER1_PASS
-        )
-        response = self.client.post(
-            INQUIRIES_LISTING_URL,
-            {'inquiry_text': 'another test inquiry'}
-        )
-
-        number_inquiries_after = len(MusicInquiry.objects.all())
-
-        self.assertEqual(200, response.status_code)
-        self.assertEqual(number_inquiries_before + 1, number_inquiries_after)
-
-    def test_head_query_method_existent_inquiry(self):
-        """Request should return code 200 because inquiry resource already
-        exists"""
-
-        response = self.client.head(
-            INQUIRIES_LISTING_URL,
-            {'q': 'test inquiry'}
-        )
-
-        self.assertEqual(200, response.status_code)
-
-    def test_head_query_method_non_existent_inquiry(self):
-        """Request should return code 404 because inquiry resource does not
-        exist"""
-
-        response = self.client.head(
-            INQUIRIES_LISTING_URL,
-            {'q': 'test inquiry non existent'}
-        )
-
-        self.assertEqual(404, response.status_code)
-
-    def test_post_short_inquiry(self):
-
-        inquiry_text = 'short'
-
-        self.client.login(
-            username=USER1_NAME,
-            password=USER1_PASS
-        )
-
-        response = self.client.post(
-            INQUIRIES_LISTING_URL,
-            {'inquiry_text': inquiry_text}
-        )
-
-        self.assertEqual(400, response.status_code)
-
-    def test_post_big_inquiry(self):
-
-        inquiry_text = ('this should have more than 80 chars. '
-                        'this should have more than 80 chars. '
-                        'this should have more than 80 chars.')
-
-        self.client.login(
-            username=USER1_NAME,
-            password=USER1_PASS
-        )
-
-        response = self.client.post(
-            INQUIRIES_LISTING_URL,
-            {'inquiry_text': inquiry_text}
-        )
-
-        self.assertEqual(400, response.status_code)
 
 
 class TestsInquiryView(TestCase):

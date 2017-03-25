@@ -14,4 +14,8 @@ urlpatterns = [
     url(r'^inquiry/(?P<inquiry_id>[0-9]+)/inquiry_report', views.inquiry_report, name='inquiry_report'),
     url(r'^inquiry/search/$', views.inquiry_search, name='inquiry_search'),
     url(r'^song/$', views.song, name='song'),
+
+    url(r'^iapi/inquiry', views.inquiry_resource, name='inquiry_resource'),
+
+
 ]
