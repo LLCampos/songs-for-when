@@ -266,3 +266,44 @@ def suggestion_resource(request, inquiry_id):
 
         else:
             return HttpResponse(status=401)
+
+
+def suggestion_vote_resource(request, inquiry_id, suggestion_id):
+
+    if not request.user.is_authenticated():
+        return HttpResponse(status=401)
+
+    if request.method == 'POST':
+
+        try:
+            modality = request.POST['modality']
+        except KeyError:
+            return HttpResponse(
+                'You forgot to send the \'modality\' parameter.',
+                status=400,
+            )
+
+        try:
+            SuggestionVote.objects.create_vote(
+                user=request.user,
+                suggestion=SongSuggestion.objects.get(id=suggestion_id),
+                modality=modality
+            )
+        except Exception:
+            return HttpResponse(
+                'Error when adding suggestion',
+                status=400
+            )
+
+        return HttpResponse(status=201)
+
+    elif request.method == 'PUT':
+
+        vote = SuggestionVote.objects.get(
+            user=request.user,
+            suggestion=SongSuggestion.objects.get(id=suggestion_id),
+        )
+
+        vote.revert_modality()
+
+        return HttpResponse(status=201)

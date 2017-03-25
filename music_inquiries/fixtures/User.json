@@ -21,7 +21,7 @@
     "model": "auth.user",
     "pk": 2,
     "fields": {
-        "password": "pbkdf2_sha256$30000$FSIKIJD4JXoY$QtD/WHb0C1oDMA+9mQcTmcszSM/79XOx6sW+Zwd4djo=",
+        "password": "pbkdf2_sha256$30000$3wI29x6F3RRl$LCLDtwX71QzPsfUb7drGjAmUlADjFk3eQWRXntJPqZ4=",
         "last_login": null,
         "is_superuser": false,
         "username": "MafaldaCampos",

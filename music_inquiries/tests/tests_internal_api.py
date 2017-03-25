@@ -5,7 +5,8 @@ from music_inquiries.models import *
 
 
 USER1_NAME = 'JonSnow'
-USER1_PASS = 'iknownothing'
+USER3_NAME = 'MikeP'
+USER_PASS = 'iknownothing'
 
 
 class TestsInquiryResource(TestCase):
@@ -29,7 +30,7 @@ class TestsInquiryResource(TestCase):
 
         self.client.login(
             username=USER1_NAME,
-            password=USER1_PASS
+            password=USER_PASS
         )
         response = self.client.post(
             self.resource_url,
@@ -42,7 +43,7 @@ class TestsInquiryResource(TestCase):
 
         self.client.login(
             username=USER1_NAME,
-            password=USER1_PASS
+            password=USER_PASS
         )
         response = self.client.post(
             self.resource_url,
@@ -82,7 +83,7 @@ class TestsInquiryResource(TestCase):
 
         self.client.login(
             username=USER1_NAME,
-            password=USER1_PASS
+            password=USER_PASS
         )
 
         response = self.client.post(
@@ -100,7 +101,7 @@ class TestsInquiryResource(TestCase):
 
         self.client.login(
             username=USER1_NAME,
-            password=USER1_PASS
+            password=USER_PASS
         )
 
         response = self.client.post(
@@ -117,7 +118,7 @@ class TestInquiryReportResource(TestCase):
 
     def test_add_complete_report(self):
 
-        self.client.login(username=USER1_NAME, password=USER1_PASS)
+        self.client.login(username=USER1_NAME, password=USER_PASS)
 
         response = self.client.post(
             reverse('music_inquiries:inquiry_report_resource', kwargs={'inquiry_id': 3}),
@@ -129,7 +130,7 @@ class TestInquiryReportResource(TestCase):
 
     def test_add_report_without_comment(self):
 
-        self.client.login(username=USER1_NAME, password=USER1_PASS)
+        self.client.login(username=USER1_NAME, password=USER_PASS)
 
         response = self.client.post(
             reverse('music_inquiries:inquiry_report_resource', kwargs={'inquiry_id': 3}),
@@ -139,7 +140,7 @@ class TestInquiryReportResource(TestCase):
         self.assertEqual(201, response.status_code)
 
     def test_add_report_with_non_valid_category(self):
-        self.client.login(username=USER1_NAME, password=USER1_PASS)
+        self.client.login(username=USER1_NAME, password=USER_PASS)
 
         response = self.client.post(
             reverse('music_inquiries:inquiry_report_resource', kwargs={'inquiry_id': 3}),
@@ -206,7 +207,7 @@ class TestSuggestionResource(TestCase):
 
     def test_add_suggestion_non_existent_song_with_youtube_url(self):
 
-        self.client.login(username=USER1_NAME, password=USER1_PASS)
+        self.client.login(username=USER1_NAME, password=USER_PASS)
 
         song_name = 'test song'
         artist_name = 'test artist'
@@ -223,7 +224,7 @@ class TestSuggestionResource(TestCase):
 
     def test_add_suggestion_existent_song_with_no_youtube_url(self):
 
-        self.client.login(username=USER1_NAME, password=USER1_PASS)
+        self.client.login(username=USER1_NAME, password=USER_PASS)
 
         song_name = 'Easy'
         artist_name = 'Son Lux'
@@ -250,3 +251,109 @@ class TestSuggestionResource(TestCase):
         )
 
         self.assertEqual(401, response.status_code)
+
+
+class TestSuggestionVoteResource(TestCase):
+
+    fixtures = [
+        'User.json',
+        'SongSuggestion.json',
+        'MusicInquiry.json',
+        'Song.json'
+    ]
+
+    def test_post_vote_no_auth(self):
+
+        suggestion = SongSuggestion.objects.get(id=1)
+
+        positive_votes_before = suggestion.number_positive_votes()
+
+        post_params = {
+            'inquiry_id': suggestion.music_inquiry.id,
+            'suggestion_id': suggestion.id
+        }
+
+        response = self.client.post(
+            reverse('music_inquiries:suggestion_vote_resource', kwargs=post_params),
+            {'modality': 'positive'}
+        )
+
+        self.assertEqual(401, response.status_code)
+        self.assertEqual(positive_votes_before, suggestion.number_positive_votes())
+
+    def test_post_votes(self):
+
+        self.client.login(username=USER1_NAME, password=USER_PASS)
+
+        suggestion = SongSuggestion.objects.get(id=1)
+
+        positive_votes_before = suggestion.number_positive_votes()
+        negative_votes_before = suggestion.number_negative_votes()
+
+        post_params = {
+            'inquiry_id': suggestion.music_inquiry.id,
+            'suggestion_id': suggestion.id
+        }
+
+        response1 = self.client.post(
+            reverse('music_inquiries:suggestion_vote_resource', kwargs=post_params),
+            {'modality': 'positive'}
+        )
+
+        self.assertEqual(201, response1.status_code)
+        self.assertEqual(
+            positive_votes_before + 1,
+            suggestion.number_positive_votes()
+        )
+
+        self.client.login(username=USER3_NAME, password=USER_PASS)
+
+        response2 = self.client.post(
+            reverse('music_inquiries:suggestion_vote_resource', kwargs=post_params),
+            {'modality': 'negative'}
+        )
+        self.assertEqual(201, response2.status_code)
+
+        self.assertEqual(
+            positive_votes_before + 1,
+            suggestion.number_positive_votes()
+        )
+
+        self.assertEqual(
+            negative_votes_before + 1,
+            suggestion.number_negative_votes()
+        )
+
+    def test_put_votes(self):
+
+        self.client.login(username=USER1_NAME, password=USER_PASS)
+
+        suggestion = SongSuggestion.objects.get(id=1)
+
+        positive_votes_before = suggestion.number_positive_votes()
+
+        post_params = {
+            'inquiry_id': suggestion.music_inquiry.id,
+            'suggestion_id': suggestion.id
+        }
+
+        response = self.client.post(
+            reverse('music_inquiries:suggestion_vote_resource', kwargs=post_params),
+            {'modality': 'positive'}
+        )
+
+        self.assertEqual(201, response.status_code)
+        self.assertEqual(
+            positive_votes_before + 1,
+            suggestion.number_positive_votes()
+        )
+
+        response = self.client.put(
+            reverse('music_inquiries:suggestion_vote_resource', kwargs=post_params),
+        )
+
+        self.assertEqual(201, response.status_code)
+        self.assertEqual(
+            positive_votes_before,
+            suggestion.number_positive_votes()
+        )
