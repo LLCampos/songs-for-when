@@ -221,6 +221,8 @@ class SuggestionVote(models.Model):
         else:
             self.modality = 'negative'
 
+        self.save()
+
         return self.modality
 
 
