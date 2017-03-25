@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 // General
 
 String.prototype.allTrim = String.prototype.allTrim ||
@@ -76,7 +78,13 @@ $(function() {
 
   });
 
-  // Inquiry
+  // ########## Inquiry Listing ###########
+
+  $('#search-inquiry-input').keyup(function(e) {
+    console.log('test');
+  });
+
+  // ########### Inquiry ###########
 
   $('.suggestions-carousel-control').click(function() {
     pauseYoutubeVideos();

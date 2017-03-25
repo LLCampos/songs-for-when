@@ -2,15 +2,19 @@
 
 {% block content %}
 
+<div class='container'>
 {% if inquiries %}
-    <ul>
-    {% for inquiry in inquiries %}
-        <li><a href="{% url 'music_inquiries:inquiry' inquiry.id %}">{{ inquiry.text }}</a></li>
-    {% endfor %}
-    </ul>
+
+  <input type="text" class="form-control"  id="search-inquiry-input" placeholder="inquiry search">
+
+  <ul id='inquiry_listing'>
+  {% for inquiry in inquiries %}
+    <li class='inquiry_listing_entry'><a href="{% url 'music_inquiries:inquiry' inquiry.id %}">{{ inquiry.text }}</a></li>
+  {% endfor %}
+  </ul>
 {% else %}
     <p>No inquiries are available.</p>
 {% endif %}
-
+</div>
 
 {% endblock %}
