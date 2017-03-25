@@ -83,43 +83,6 @@ def suggestion(request, inquiry_id):
         return HttpResponse(status=200)
 
 
-def inquiry_search(request):
-
-    """Endpoint at /search/
-
-    GET:
-        Returns a JSON containing information about similar Inquiries to the one
-        send in the 'q' property.
-
-        Parameters:
-            'q'
-    """
-
-    if request.method == 'GET':
-
-        query = request.GET['q']
-        results = SearchQuerySet().filter(content=query)
-        results_objects = map(lambda result: result.object, results)
-
-        results_dicts = []
-
-        for result in results_objects:
-            result_dict = {}
-
-            result_dict['url'] = reverse(
-                'music_inquiries:inquiry',
-                kwargs={'inquiry_id': result.id}
-            )
-            result_dict['text'] = result.text
-            result_dict['number_of_suggestions'] = result.get_number_active_suggestions()
-
-            results_dicts.append(result_dict)
-
-        results_json = json.dumps(results_dicts)
-
-        return HttpResponse(results_json, content_type='application/json')
-
-
 def inquiry_resource(request):
 
     """
@@ -262,3 +225,40 @@ def song_resource(request):
             return HttpResponse(status=200)
         else:
             return HttpResponse(status=404)
+
+
+def inquiry_search_resource(request):
+
+    """Endpoint at iapi/inquiry/search/
+
+    GET:
+        Returns a JSON containing information about similar Inquiries to the one
+        send in the 'q' property.
+
+        Parameters:
+            'q'
+    """
+
+    if request.method == 'GET':
+
+        query = request.GET['q']
+        results = SearchQuerySet().filter(content=query)
+        results_objects = map(lambda result: result.object, results)
+
+        results_dicts = []
+
+        for result in results_objects:
+            result_dict = {}
+
+            result_dict['url'] = reverse(
+                'music_inquiries:inquiry',
+                kwargs={'inquiry_id': result.id}
+            )
+            result_dict['text'] = result.text
+            result_dict['number_of_suggestions'] = result.get_number_active_suggestions()
+
+            results_dicts.append(result_dict)
+
+        results_json = json.dumps(results_dicts)
+
+        return HttpResponse(results_json, content_type='application/json')

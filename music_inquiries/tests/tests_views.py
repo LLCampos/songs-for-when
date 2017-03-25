@@ -3,8 +3,6 @@ from django.core.urlresolvers import reverse
 
 from selenium import webdriver
 
-from music_inquiries.models import *
-
 HOST = 'http://localhost:8000'
 INDEX_URL = reverse('music_inquiries:index')
 
@@ -194,19 +192,6 @@ class TestSuggestionView(TestCase):
 
         self.assertEqual(302, response.status_code)
 
-
-class TestsInquirySearchView(TestCase):
-
-    def setUp(self):
-        self.client = Client()
-
-    def test_page_ok(self):
-        response = self.client.get(
-            reverse('music_inquiries:inquiry_search'),
-            {'q': 'test'}
-        )
-
-        self.assertEqual(200, response.status_code)
 
 # class TestSuggestionVoteView(Test.Case):
 

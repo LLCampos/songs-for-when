@@ -182,3 +182,14 @@ class TestSongResource(TestCase):
         )
 
         self.assertEqual(404, response.status_code)
+
+
+class TestsInquirySearchResource(TestCase):
+
+    def test_resource_ok(self):
+        response = self.client.get(
+            reverse('music_inquiries:inquiry_search_resource'),
+            {'q': 'test'}
+        )
+
+        self.assertEqual(200, response.status_code)
