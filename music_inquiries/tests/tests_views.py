@@ -4,7 +4,6 @@ from django.core.urlresolvers import reverse
 from selenium import webdriver
 
 HOST = 'http://localhost:8000'
-INDEX_URL = reverse('music_inquiries:index')
 
 USER1_NAME = 'JonSnow'
 USER1_PASS = 'iknownothing'
@@ -29,21 +28,22 @@ class TestsIndexView(TransactionTestCase):
     fixtures = ['User.json', 'MusicInquiry.json']
 
     def setUp(self):
-        self.client = Client()
+        self.index_url = reverse('music_inquiries:index')
+
         self.driver = webdriver.Chrome()
 
     def tearDown(self):
         self.driver.quit()
 
     def test_page_ok(self):
-        response = self.client.get(INDEX_URL)
+        response = self.client.get(self.index_url)
         self.assertEqual(200, response.status_code)
 
     def test_submit_inquiry_button_disabled_no_login(self):
         """If user is not authenticated, button should redirect user to login
         page"""
 
-        self.driver.get(HOST + INDEX_URL)
+        self.driver.get(HOST + self.index_url)
         submit_button = self.driver.find_element_by_id(
             'inquiry-submit-form-button'
         )
@@ -51,14 +51,14 @@ class TestsIndexView(TransactionTestCase):
         button_message = submit_button.text
         button_href = submit_button.get_property('href')
 
-        login_page_url = HOST + reverse('login') + '?next=' + INDEX_URL
+        login_page_url = HOST + reverse('login') + '?next=' + self.index_url
 
         self.assertEqual('Login to Ask for Suggestions', button_message)
         self.assertEqual(login_page_url, button_href)
 
     def test_submit_no_min_length(self):
 
-        self.driver.get(HOST + INDEX_URL)
+        self.driver.get(HOST + self.index_url)
         login_user(self.driver, USER1_NAME, USER1_PASS)
 
         inquiry_input = self.driver.find_element_by_name('inquiry_text')
@@ -77,7 +77,7 @@ class TestsIndexView(TransactionTestCase):
         """Inquiry should only count as having 2 characters. (the letter and
         one space)"""
 
-        self.driver.get(HOST + INDEX_URL)
+        self.driver.get(HOST + self.index_url)
         login_user(self.driver, USER1_NAME, USER1_PASS)
 
         inquiry_input = self.driver.find_element_by_name('inquiry_text')
@@ -94,7 +94,7 @@ class TestsIndexView(TransactionTestCase):
 
     # def test_submit_legal_inquiry(self):
 
-    #     self.driver.get(HOST + INDEX_URL)
+    #     self.driver.get(HOST + self.index_url)
     #     login_user(self.driver, USER1_NAME, USER1_PASS)
 
     #     inquiry_input = self.driver.find_element_by_name('inquiry_text')
@@ -131,66 +131,6 @@ class TestsInquiryView(TestCase):
         ))
 
         self.assertEqual(200, response.status_code)
-
-
-class TestSuggestionView(TestCase):
-
-    fixtures = [
-        'User.json',
-        'MusicInquiry.json',
-        'SongSuggestion.json',
-        'Song.json'
-    ]
-
-    def setUp(self):
-        self.client = Client()
-
-    def test_add_suggestion_non_existent_song_with_youtube_url(self):
-
-        self.client.login(username=USER1_NAME, password=USER1_PASS)
-
-        song_name = 'test song'
-        artist_name = 'test artist'
-        youtube_url = 'https://www.youtube.com/watch?v=znHpyf1Lolo'
-
-        response = self.client.post(
-            reverse('music_inquiries:suggestion', kwargs={'inquiry_id': 4}),
-            {'song_name': song_name,
-             'artist_name': artist_name,
-             'youtube_url': youtube_url}
-        )
-
-        self.assertEqual(200, response.status_code)
-
-    def test_add_suggestion_existent_song_with_no_youtube_url(self):
-
-        self.client.login(username=USER1_NAME, password=USER1_PASS)
-
-        song_name = 'Easy'
-        artist_name = 'Son Lux'
-
-        response = self.client.post(
-            reverse('music_inquiries:suggestion', kwargs={'inquiry_id': 4}),
-            {'song_name': song_name,
-             'artist_name': artist_name}
-        )
-
-        self.assertEqual(200, response.status_code)
-
-    def test_add_suggestion_without_auth(self):
-
-        song_name = 'test song'
-        artist_name = 'test artist'
-        youtube_url = 'https://www.youtube.com/watch?v=znHpyf1Lolo'
-
-        response = self.client.post(
-            reverse('music_inquiries:suggestion', kwargs={'inquiry_id': 4}),
-            {'song_name': song_name,
-             'artist_name': artist_name,
-             'youtube_url': youtube_url}
-        )
-
-        self.assertEqual(302, response.status_code)
 
 
 # class TestSuggestionVoteView(Test.Case):

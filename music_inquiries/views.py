@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404, HttpResponse
-from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -39,48 +38,6 @@ def inquiry(request, inquiry_id):
     }
 
     return render(request, 'music_inquiries/inquiry.html', context)
-
-
-@login_required
-def suggestion(request, inquiry_id):
-    """Endpoint at /inquiry/{inquiry_id}/suggestion
-
-    POST:
-        Submits a new Suggestion to the Inquiry (Auth required);
-
-        Parameters:
-            'song_name'
-            'song_artist'
-            'youtube_url'
-    """
-
-    music_inquiry = get_object_or_404(MusicInquiry, pk=inquiry_id)
-
-    if request.method == 'POST':
-        try:
-            song_name = request.POST['song_name']
-            artist_name = request.POST['artist_name']
-            youtube_url = request.POST.get('youtube_url')
-        except(KeyError):
-            raise Http404(
-                "Some of the required parameters was not sent in the request."
-            )
-
-        try:
-            SongSuggestion.objects.create_suggestion(
-                user=request.user,
-                music_inquiry=music_inquiry,
-                song_name=song_name,
-                artist_name=artist_name,
-                youtube_url=youtube_url,
-            )
-        except Exception(IntegrityError, ValidationError):
-            return HttpResponse(
-                'Error when adding suggestion',
-                status=400
-            )
-
-        return HttpResponse(status=200)
 
 
 def inquiry_resource(request):
@@ -262,3 +219,50 @@ def inquiry_search_resource(request):
         results_json = json.dumps(results_dicts)
 
         return HttpResponse(results_json, content_type='application/json')
+
+
+def suggestion_resource(request, inquiry_id):
+    """Endpoint at /inquiry/{inquiry_id}/suggestion
+
+    POST:
+        Submits a new Suggestion to the Inquiry (Auth required);
+
+        Parameters:
+            'song_name'
+            'song_artist'
+            'youtube_url'
+    """
+
+    music_inquiry = get_object_or_404(MusicInquiry, pk=inquiry_id)
+
+    if request.method == 'POST':
+
+        if request.user.is_authenticated():
+
+            try:
+                song_name = request.POST['song_name']
+                artist_name = request.POST['artist_name']
+                youtube_url = request.POST.get('youtube_url')
+            except(KeyError):
+                raise Http404(
+                    "Some of the required parameters was not sent in the request."
+                )
+
+            try:
+                SongSuggestion.objects.create_suggestion(
+                    user=request.user,
+                    music_inquiry=music_inquiry,
+                    song_name=song_name,
+                    artist_name=artist_name,
+                    youtube_url=youtube_url,
+                )
+            except Exception(IntegrityError, ValidationError):
+                return HttpResponse(
+                    'Error when adding suggestion',
+                    status=400
+                )
+
+            return HttpResponse(status=201)
+
+        else:
+            return HttpResponse(status=401)

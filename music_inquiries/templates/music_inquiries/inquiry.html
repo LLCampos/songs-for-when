@@ -41,7 +41,7 @@
         <h4 class="modal-title" id="myModalLabel">Make Song Suggestion</h4>
       </div>
       <div class="modal-body">
-        <form action="{% url 'music_inquiries:suggestion' inquiry.id %}" method="post" id="submit-suggestion-form">
+        <form action="{% url 'music_inquiries:suggestion_resource' inquiry.id %}" method="post" id="submit-suggestion-form">
           {% csrf_token %}
           <input type="text" placeholder="Song Artist" name="artist_name"/>
           <input type="text" placeholder="Song Name" name="song_name"/>
