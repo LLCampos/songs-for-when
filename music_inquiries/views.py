@@ -155,43 +155,6 @@ def song(request):
             return HttpResponse(status=404)
 
 
-@login_required
-def inquiry_report(request, inquiry_id):
-
-    """Endpoint at /inquiry/{inquiry_id}/report/
-
-    POST:
-        Reports something wrong with an Inquiry
-
-        Parameters:
-            category
-            comment
-    """
-
-    try:
-        category = request.POST['category']
-        comment = request.POST.get('comment')
-    except KeyError:
-        raise Http404(
-            "Some of the required parameters was not sent in the request."
-        )
-
-    try:
-        InquiryProblemReport.objects.create_inquiry_report(
-            user=request.user,
-            inquiry=MusicInquiry.objects.get(id=inquiry_id),
-            category=category,
-            comment=comment,
-        )
-    except (IntegrityError, ValidationError):
-        return HttpResponse(
-            'Error when submitting report',
-            status=400
-        )
-
-    return HttpResponse(status=200)
-
-
 def inquiry_resource(request):
 
     """
@@ -229,7 +192,7 @@ def inquiry_resource(request):
             try:
                 inquiry_text = request.POST['inquiry_text']
             except(KeyError):
-                raise HttpResponse(
+                return HttpResponse(
                     "'inquiry_text' parameter was not sent in the request.",
                     status=400
                 )
@@ -252,4 +215,50 @@ def inquiry_resource(request):
             return HttpResponse('Unauthorized', status=401)
 
     else:
-        return HttpResponse('Unauthorized', status=405)
+        return HttpResponse(status=405)
+
+
+def inquiry_report_resource(request, inquiry_id):
+
+    """Endpoint at iapi/inquiry/{inquiry_id}/report/
+
+    POST:
+        Reports something wrong with an Inquiry
+
+        Parameters:
+            category
+            comment
+    """
+
+    if request.method == 'POST':
+
+        if request.user.is_authenticated():
+
+            try:
+                category = request.POST['category']
+                comment = request.POST.get('comment')
+            except KeyError:
+                return HttpResponse(
+                    "Some of the required parameters was not sent in the request.",
+                    status=400
+                )
+
+            try:
+                InquiryProblemReport.objects.create_inquiry_report(
+                    user=request.user,
+                    inquiry=MusicInquiry.objects.get(id=inquiry_id),
+                    category=category,
+                    comment=comment,
+                )
+            except (IntegrityError, ValidationError):
+                return HttpResponse(
+                    'Error when submitting report',
+                    status=400
+                )
+
+            return HttpResponse(status=201)
+
+        return HttpResponse(status=401)
+
+    else:
+        return HttpResponse(status=405)
