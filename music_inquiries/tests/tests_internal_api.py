@@ -157,3 +157,28 @@ class TestInquiryReportResource(TestCase):
         )
 
         self.assertEqual(401, response.status_code)
+
+
+class TestSongResource(TestCase):
+
+    fixtures = ['Song.json']
+
+    def test_check_if_existent_song_exists(self):
+
+        response = self.client.head(
+            reverse('music_inquiries:song_resource'),
+            {'song_name': 'Easy',
+             'artist_name': 'Son Lux'}
+        )
+
+        self.assertEqual(200, response.status_code)
+
+    def test_check_if_non_existent_song_exists(self):
+
+        response = self.client.head(
+            reverse('music_inquiries:song_resource'),
+            {'song_name': 'asdfsadfsadf',
+             'artist_name': 'Son asdfsadfsadf'}
+        )
+
+        self.assertEqual(404, response.status_code)

@@ -120,41 +120,6 @@ def inquiry_search(request):
         return HttpResponse(results_json, content_type='application/json')
 
 
-def song(request):
-
-    """Endpoint at /song/
-
-    HEAD:
-        Returns status code 200 if song already exists, 404 otherwise.
-
-        Parameters:
-            song_name
-            artist_name
-    """
-
-    if request.method == 'HEAD':
-        """Method used to check if a certain inquiry text was already
-        submitted"""
-
-        try:
-            artist_name = request.GET['artist_name']
-            song_name = request.GET['song_name']
-        except KeyError:
-            raise Http404(
-                "Some of the required parameters was not sent in the request."
-            )
-
-        song_exists = Song.objects.does_song_exist(
-            artist_name=artist_name,
-            song_name=song_name,
-        )
-
-        if song_exists:
-            return HttpResponse(status=200)
-        else:
-            return HttpResponse(status=404)
-
-
 def inquiry_resource(request):
 
     """
@@ -262,3 +227,38 @@ def inquiry_report_resource(request, inquiry_id):
 
     else:
         return HttpResponse(status=405)
+
+
+def song_resource(request):
+
+    """Endpoint at iapi/song/
+
+    HEAD:
+        Returns status code 200 if song already exists, 404 otherwise.
+
+        Parameters:
+            song_name
+            artist_name
+    """
+
+    if request.method == 'HEAD':
+        """Method used to check if a certain inquiry text was already
+        submitted"""
+
+        try:
+            artist_name = request.GET['artist_name']
+            song_name = request.GET['song_name']
+        except KeyError:
+            raise Http404(
+                "Some of the required parameters was not sent in the request."
+            )
+
+        song_exists = Song.objects.does_song_exist(
+            artist_name=artist_name,
+            song_name=song_name,
+        )
+
+        if song_exists:
+            return HttpResponse(status=200)
+        else:
+            return HttpResponse(status=404)
