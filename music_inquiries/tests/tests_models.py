@@ -471,6 +471,20 @@ class testSuggestionVote(TestCase):
             modality='positive'
         )
 
+    def test_revert_modality_method(self):
+
+        vote = SuggestionVote.objects.create_vote(
+            user=self.test_user_1,
+            suggestion=self.test_suggestion,
+            modality='positive'
+        )
+
+        self.assertEqual('positive', vote.modality)
+
+        vote.revert_modality()
+
+        self.assertEqual('negative', vote.modality)
+
 
 class testInquiryProblemReport(TestCase):
 

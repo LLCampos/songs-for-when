@@ -189,7 +189,7 @@ class SuggestionVoteManager(models.Manager):
         if user.id == suggestion.user.id:
             raise ValidationError('User can\'t vote in her own Suggestion.')
 
-        self.create(user=user, suggestion=suggestion, modality=modality)
+        return self.create(user=user, suggestion=suggestion, modality=modality)
 
     def remove_vote(self, user, suggestion):
         suggestion = self.get(user=user, suggestion=suggestion)
@@ -211,6 +211,17 @@ class SuggestionVote(models.Model):
         unique_together = ('user', 'suggestion',)
 
     objects = SuggestionVoteManager()
+
+    def revert_modality(self):
+
+        assert self.modality in ['positive', 'negative']
+
+        if self.modality == 'negative':
+            self.modality = 'positive'
+        else:
+            self.modality = 'negative'
+
+        return self.modality
 
 
 class InquiryProblemReportManager(models.Manager):
