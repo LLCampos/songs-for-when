@@ -1,11 +1,9 @@
 // General
 
-String.prototype.allTrim = String.prototype.allTrim ||
-     function (){
-        return this.replace(/\s+/g,' ')
-                   .replace(/^\s+|\s+$/,'');
-     };
-
+const allTrim = function allTrim(string) {
+  return string.replace(/\s+/g, ' ')
+               .replace(/^\s+|\s+$/, '');
+};
 
 // Suggestion
 
@@ -19,7 +17,7 @@ const pauseYoutubeVideos = function pauseYoutubeVideos() {
 
 const inquiry = {
   text: function getText() {
-    return $('#inquiry-text-input').val().allTrim();
+    return allTrim($('#inquiry-text-input').val());
   },
   clean: function cleanInput() {
     $('#inquiry-text-input').val('');
