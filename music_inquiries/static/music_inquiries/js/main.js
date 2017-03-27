@@ -1,9 +1,7 @@
-/*jshint esversion: 6 */
-
 // General
 
 String.prototype.allTrim = String.prototype.allTrim ||
-     function(){
+     function (){
         return this.replace(/\s+/g,' ')
                    .replace(/^\s+|\s+$/,'');
      };
@@ -11,35 +9,32 @@ String.prototype.allTrim = String.prototype.allTrim ||
 
 // Suggestion
 
-pauseYoutubeVideos = function() {
+const pauseYoutubeVideos = function pauseYoutubeVideos() {
   const iframe = $('.item.active').find('.iframe-suggestion');
-  let src = iframe.attr('src');
+  const src = iframe.attr('src');
   $(iframe).attr('src', '').attr('src', src);
 };
 
 // Index
 
-let inquiry = {
-  text: function() {
+const inquiry = {
+  text: function getText() {
     return $('#inquiry-text-input').val().allTrim();
   },
-  clean: function() {
+  clean: function cleanInput() {
     $('#inquiry-text-input').val('');
-  }
+  },
 };
 
-updateCharsLeftOnInquirySubmitButton = function() {
-  let charsLeft = 10 - inquiry.text().length;
-  $('#inquiry-submit-form-button').attr('value',  charsLeft.toString() + ' characters left');
+const updateCharsLeftOnInquirySubmitButton = function updateCharsLeftOnInquirySubmitButton() {
+  const charsLeft = 10 - inquiry.text().length;
+  $('#inquiry-submit-form-button').attr('value', `${charsLeft.toString()} characters left`);
 };
 
 
-$(function() {
-
+$(() => {
   // ########### Index ###########
-
-
-  $('#inquiry-text-input').focusout(function() {
+  $('#inquiry-text-input').focusout(() => {
     if (inquiry.text().length === 0) {
       inquiry.clean();
     }
@@ -47,7 +42,7 @@ $(function() {
   });
 
   // Implement restriction on min length
-  $(document).on('keyup focus','#inquiry-text-input',function(e) {
+  $(document).on('keyup focus', '#inquiry-text-input', () => {
     if (inquiry.text().length >= 10) {
       $('#inquiry-submit-form-button').attr('value', 'Ask for Suggestions')
                                       .prop('disabled', false);
@@ -58,36 +53,32 @@ $(function() {
   });
 
   // Avoid sending of repeated inquiries
-  $('#inquiry-form').submit(function(event) {
-    thisForm = this;
+  $('#inquiry-form').submit((event) => {
+    const thisForm = this;
     $.ajax({
       url: 'http://localhost:8000/inquiry/',
       type: 'HEAD',
-      data: {'q': inquiry.text()},
+      data: { q: inquiry.text() },
     })
-    .done(function() {
+    .done(() => {
       // If inquiry already exists.
       alert('Inquiry already exists! :)');
     })
-    .fail(function() {
+    .fail(() => {
       // If inquiry does not exists.
       thisForm.submit();
     });
 
     event.preventDefault();
-
   });
-
   // ########## Inquiry Listing ###########
-
-  $('#search-inquiry-input').keyup(function(e) {
+  $('#search-inquiry-input').keyup(() => {
     console.log('test');
   });
 
   // ########### Inquiry ###########
 
-  $('.suggestions-carousel-control').click(function() {
+  $('.suggestions-carousel-control').click(() => {
     pauseYoutubeVideos();
   });
-
 });
