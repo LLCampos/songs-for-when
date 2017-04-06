@@ -9,6 +9,18 @@ const suggestionArtistAndSongInputFilled = () => {
   return false;
 };
 
+const getCurrentInquiryID = () => {
+  const currentUrl = window.location.href;
+  const splittedUrl = currentUrl.split('/');
+
+  const lastElement = splittedUrl[splittedUrl.length - 1];
+  const secondToLastElement = splittedUrl[splittedUrl.length - 2];
+  if (lastElement !== '') {
+    return lastElement;
+  }
+  return secondToLastElement;
+};
+
 
 $(() => {
   $('.suggestions-carousel-control').click(() => {
@@ -16,26 +28,32 @@ $(() => {
   });
 
   $('#suggestion-input-artist, #suggestion-input-song').keyup(() => {
-    const searchButton = $('#suggestion-input-search');
-    if (searchButton.prop('disabled') && suggestionArtistAndSongInputFilled()) {
-      searchButton.prop('disabled', false);
-    } else if (!searchButton.prop('disabled') && !suggestionArtistAndSongInputFilled()) {
-      searchButton.prop('disabled', true);
+    const submittButton = $('#suggestion-form-submit');
+    if (submittButton.prop('disabled') && suggestionArtistAndSongInputFilled()) {
+      submittButton.prop('disabled', false);
+    } else if (!submittButton.prop('disabled') && !suggestionArtistAndSongInputFilled()) {
+      submittButton.prop('disabled', true);
     }
   });
 
-  $('#suggestion-input-search').click(() => {
+  $('#suggestion-form-submit').click((event) => {
+    event.preventDefault();
     const artistValue = $('#suggestion-input-artist').val().trim();
     const songValue = $('#suggestion-input-song').val().trim();
+    const currentInquiryID = getCurrentInquiryID();
+
+    let data = {
+      artist_name: artistValue,
+      song_name: songValue,
+    };
 
     $.ajax('/iapi/song', {
       type: 'HEAD',
-      data: {
-        artist_name: artistValue,
-        song_name: songValue,
-      },
+      data,
       success: () => {
-        $('#suggestion-form-submit').prop('disabled', false);
+        $.post(`/iapi/inquiry/${currentInquiryID}/suggestion/`, data, () => {
+          console.log('ok');
+        });
       },
       error: () => {
         console.log('not exist');

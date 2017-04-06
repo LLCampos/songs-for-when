@@ -10,3 +10,18 @@ const pauseYoutubeVideos = function pauseYoutubeVideos() {
   const src = iframe.attr('src');
   $(iframe).attr('src', '').attr('src', src);
 };
+
+function csrfSafeMethod(method) {
+  // these HTTP methods do not require CSRF protection
+  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+const csrftoken = Cookies.get('csrftoken');
+
+$.ajaxSetup({
+  beforeSend: (xhr, settings) => {
+    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+      xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    }
+  },
+});
