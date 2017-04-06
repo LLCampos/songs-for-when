@@ -1,20 +1,3 @@
-// General
-
-const allTrim = function allTrim(string) {
-  return string.replace(/\s+/g, ' ')
-               .replace(/^\s+|\s+$/, '');
-};
-
-// Suggestion
-
-const pauseYoutubeVideos = function pauseYoutubeVideos() {
-  const iframe = $('.item.active').find('.iframe-suggestion');
-  const src = iframe.attr('src');
-  $(iframe).attr('src', '').attr('src', src);
-};
-
-// Index
-
 const inquiry = {
   text: function getText() {
     return allTrim($('#inquiry-text-input').val());
@@ -28,7 +11,6 @@ const updateCharsLeftOnInquirySubmitButton = function updateCharsLeftOnInquirySu
   const charsLeft = 10 - inquiry.text().length;
   $('#inquiry-submit-form-button').attr('value', `${charsLeft.toString()} characters left`);
 };
-
 
 $(() => {
   // ########### Index ###########
@@ -68,15 +50,5 @@ $(() => {
     });
 
     event.preventDefault();
-  });
-  // ########## Inquiry Listing ###########
-  $('#search-inquiry-input').keyup(() => {
-    console.log('test');
-  });
-
-  // ########### Inquiry ###########
-
-  $('.suggestions-carousel-control').click(() => {
-    pauseYoutubeVideos();
   });
 });
