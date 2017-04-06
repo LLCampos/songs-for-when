@@ -4,7 +4,7 @@
 
 <div id="div-suggestions">
   <div>
-    <h3 class="light-grey-font">{{ inquiry.text }}<span id="plus-sign-inquiry-suggestions-title" class="glyphicon glyphicon-plus-sign red-font" aria-hidden="true" data-toggle="modal" data-target="#myModal"/></h3>
+    <h3 class="light-grey-font">{{ inquiry.text }}<span id="plus-sign-inquiry-suggestions-title" class="glyphicon glyphicon-plus-sign red-font" aria-hidden="true" data-toggle="modal" data-target="#suggestion-form-modal"/></h3>
   </div>
 
   {% if suggestions %}
@@ -41,26 +41,28 @@
 
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="suggestion-form-modal" tabindex="-1" role="dialog" aria-labelledby="suggestion-form-modal-label">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Make Song Suggestion</h4>
+        <h4 class="modal-title" id="suggestion-form-modal-label">Make Song Suggestion</h4>
       </div>
+
       <div class="modal-body">
         <form action="{% url 'music_inquiries:suggestion_resource' inquiry.id %}" method="post" id="submit-suggestion-form">
           {% csrf_token %}
-          <input type="text" placeholder="Song Artist" name="artist_name"/>
-          <input type="text" placeholder="Song Name" name="song_name"/>
-          <input type="text" placeholder="Youtube URL" name="youtube_url"/>
-          <input type="submit" value="Submit">
-        </form>
+          <input id="suggestion-input-artist" type="text" placeholder="Song Artist" name="artist_name"/>
+          <input id="suggestion-input-song" type="text" placeholder="Song Name" name="song_name"/>
+          <button id="suggestion-input-search" type="button" class="btn btn-warning" disabled>Search</button>
+          <input id="suggestion-input-youtube-url" type="text" placeholder="Youtube URL" name="youtube_url" hidden/>
       </div>
+
       <div class="modal-footer">
+        <input id="suggestion-form-submit" class="btn btn-default" type="submit" value="Submit" disabled>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
+      </form>
     </div>
   </div>
 </div>
