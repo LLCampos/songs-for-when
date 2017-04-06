@@ -204,7 +204,8 @@ def inquiry_search_resource(request):
 
         results_dicts = []
 
-        for result in results_objects:
+        # Only get 15 results
+        for result in results_objects[:15]:
             result_dict = {}
 
             result_dict['url'] = reverse(
