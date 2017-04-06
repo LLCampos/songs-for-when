@@ -35,3 +35,11 @@
     cursor: pointer;
 }
 
+#no-suggestions-message {
+    position: relative;
+    top: 5em;
+    text-align: center;
+    color: #d1d1e0;
+    font-size: 2em;
+}
+
