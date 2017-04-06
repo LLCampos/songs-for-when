@@ -5,7 +5,16 @@
 
 .inquiry_listing_entry {
     background: rgba(62, 64, 66, 0.8);
-    padding: 0.5em;
+    padding: 0.5em 1.5em;
     margin: 5px 0;
     border-radius: 5px;
+}
+
+.inquiry_listing_entry_link {
+    font-size: 1em;
+}
+
+.inquiry_listing_entry_number_suggestions {
+    float: right;
+    color: #d1d1e0;
 }
