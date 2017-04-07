@@ -2,8 +2,12 @@
 
 {% block content %}
 
-
 <div id='div-login' class="absolute-center">
+  <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="../../static/music_inquiries/images/btn_google_signin_dark_normal_web.png"></a>
+</div>
+
+
+<!-- <div id='div-login' class="absolute-center">
   {% if form.errors %}
   <p>Your username and password didn't match. Please try again.</p>
   {% endif %}
@@ -40,5 +44,5 @@
 
   <p><a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a>
 </div>
-
+ -->
 {% endblock %}
