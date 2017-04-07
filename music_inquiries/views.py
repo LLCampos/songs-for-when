@@ -16,6 +16,9 @@ def index(request):
 
 
 def inquiries_listing(request):
+    if request.method != 'GET':
+        return HttpResponse(status=405)
+
     latest_inquiries = MusicInquiry.objects.order_by('-created_at')[:15]
     context = {'inquiries': latest_inquiries}
     return render(request, 'music_inquiries/inquiries_listing.html', context)

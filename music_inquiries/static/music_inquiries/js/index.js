@@ -34,9 +34,9 @@ $(() => {
 
   // Avoid sending of repeated inquiries
   $('#inquiry-form').submit((event) => {
-    const thisForm = this;
+    const inquiryResourceUrl = $('#inquiry-form').attr('action');
     $.ajax({
-      url: 'http://localhost:8000/inquiry/',
+      url: inquiryResourceUrl,
       type: 'HEAD',
       data: { q: inquiry.text() },
     })
@@ -46,7 +46,13 @@ $(() => {
     })
     .fail(() => {
       // If inquiry does not exists.
-      thisForm.submit();
+      $.post({
+        url: inquiryResourceUrl,
+        data: { inquiry_text: inquiry.text() },
+        success: () => {
+          alert('Inquiry added!');
+        },
+      });
     });
 
     event.preventDefault();

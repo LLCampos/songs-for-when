@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form action="{% url 'music_inquiries:inquiries_listing' %}" method="post" id="inquiry-form">
+<form action="{% url 'music_inquiries:inquiry_resource' %}" method="post" id="inquiry-form">
   {% csrf_token %}
   <input id="inquiry-text-input" type="text" name="inquiry_text" placeholder="What kind of music are you looking for?" class="light-grey-font" maxlength="80" autocomplete="off">
   {% if user.is_authenticated %}
