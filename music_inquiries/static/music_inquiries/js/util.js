@@ -5,6 +5,18 @@ const allTrim = function allTrim(string) {
                .replace(/^\s+|\s+$/, '');
 };
 
+// http://stackoverflow.com/a/28735569/5082718
+const validateYouTubeUrl = (url) => {
+  if (url !== undefined || url !== '') {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      return true;
+    }
+  }
+  return false;
+};
+
 const pauseYoutubeVideos = function pauseYoutubeVideos() {
   const iframe = $('.item.active').find('.iframe-suggestion');
   const src = iframe.attr('src');

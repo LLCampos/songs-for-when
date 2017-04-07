@@ -42,7 +42,7 @@ $(() => {
     const songValue = $('#suggestion-input-song').val().trim();
     const currentInquiryID = getCurrentInquiryID();
 
-    let data = {
+    const data = {
       artist_name: artistValue,
       song_name: songValue,
     };
@@ -52,12 +52,41 @@ $(() => {
       data,
       success: () => {
         $.post(`/iapi/inquiry/${currentInquiryID}/suggestion/`, data, () => {
-          console.log('ok');
+          location.reload();
         });
       },
       error: () => {
-        console.log('not exist');
+        $('#youtube-url-form-modal').modal('show');
       },
     });
+  });
+
+  $('#suggestion-input-youtube-url').keyup(() => {
+    const url = $('#suggestion-input-youtube-url').val().trim();
+    if (validateYouTubeUrl(url)) {
+      $('#youtube-url-not-valid-message').addClass('hidden');
+      $('#youtube_url-form-submit').prop('disabled', false);
+    } else {
+      $('#youtube-url-not-valid-message').removeClass('hidden');
+      $('#youtube_url-form-submit').prop('disabled', true);
+    }
+  });
+
+  $('#youtube_url-form-submit').click((event) => {
+    const artistValue = $('#suggestion-input-artist').val().trim();
+    const songValue = $('#suggestion-input-song').val().trim();
+    const youtubeUrl = $('#suggestion-input-youtube-url').val().trim();
+    const currentInquiryID = getCurrentInquiryID();
+
+    const data = {
+      artist_name: artistValue,
+      song_name: songValue,
+      youtube_url: youtubeUrl,
+    };
+
+    $.post(`/iapi/inquiry/${currentInquiryID}/suggestion/`, data, () => {
+      location.reload();
+    });
+    event.preventDefault();
   });
 });

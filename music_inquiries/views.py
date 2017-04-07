@@ -31,6 +31,7 @@ def inquiry(request, inquiry_id):
 
     inquiry = get_object_or_404(MusicInquiry, pk=inquiry_id)
     suggestions = SongSuggestion.objects.filter(music_inquiry=inquiry_id)
+    suggestions = suggestions.order_by('-created_at')
 
     context = {
         'inquiry': inquiry,

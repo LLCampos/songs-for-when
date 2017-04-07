@@ -43,3 +43,32 @@
     font-size: 2em;
 }
 
+#suggestion-form-modal .modal-content,
+#youtube-url-form-modal .modal-content {
+    background-color: rgb(75, 78, 81);
+}
+
+#suggestion-form-modal .modal-header,
+#youtube-url-form-modal .modal-header {
+    text-align: center;
+    border-bottom-color: #5d6166;
+}
+
+#suggestion-form-modal .modal-title,
+#youtube-url-form-modal .modal-title {
+    font-weight: 900;
+}
+
+#suggestion-form-modal .modal-footer,
+#youtube-url-form-modal .modal-footer {
+    border-top-color: #5d6166;
+}
+
+#youtube-url-not-valid-message {
+    display: inline;
+    margin-left: 1em;
+}
+
+#suggestion-input-youtube-url {
+    width: 25em;
+}
