@@ -29,11 +29,8 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        {% if request.path == '/' %}
-          <li><a href="{% url 'music_inquiries:inquiries_listing' %}">See other requests</a></li>
-        {% else %}
-          <li><a href="{% url 'music_inquiries:index' %}">Make request</a></li>
-        {% endif %}
+        <li><a href="{% url 'music_inquiries:index' %}">Make request</a></li>
+        <li><a href="{% url 'music_inquiries:inquiries_listing' %}">See requests</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
