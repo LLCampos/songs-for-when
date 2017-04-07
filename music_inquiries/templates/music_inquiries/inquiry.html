@@ -1,5 +1,7 @@
 {% extends 'music_inquiries/base.html' %}
 
+{% load static %}
+
 {% block content %}
 
 <div id="div-suggestions">
@@ -98,5 +100,5 @@
 {% endblock %}
 
 {% block specific_scripts %}
-  <script src="../../static/music_inquiries/js/inquiry.js"></script>
+  <script src="{% static 'music_inquiries/js/inquiry.js' %}"></script>
 {% endblock %}

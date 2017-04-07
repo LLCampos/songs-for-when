@@ -1,5 +1,7 @@
 {% extends 'music_inquiries/base.html' %}
 
+{% load static %}
+
 {% block content %}
 
 <form action="{% url 'music_inquiries:inquiry_resource' %}" method="post" id="inquiry-form">
@@ -16,5 +18,5 @@
 {% endblock %}
 
 {% block specific_scripts %}
-  <script src="../../static/music_inquiries/js/index.js"></script>
+  <script src="{% static 'music_inquiries/js/index.js' %}"></script>
 {% endblock %}

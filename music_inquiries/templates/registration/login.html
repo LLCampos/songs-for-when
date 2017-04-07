@@ -1,9 +1,11 @@
 {% extends "music_inquiries/base.html" %}
 
+{% load static %}
+
 {% block content %}
 
 <div id='div-login' class="absolute-center">
-  <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="../../static/music_inquiries/images/btn_google_signin_dark_normal_web.png"></a>
+  <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="{% static 'music_inquiries/images/btn_google_signin_dark_normal_web.png' %}"></a>
 </div>
 
 
