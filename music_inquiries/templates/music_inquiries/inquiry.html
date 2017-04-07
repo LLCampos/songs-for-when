@@ -4,7 +4,14 @@
 
 <div id="div-suggestions">
   <div>
-    <h3 class="light-grey-font">{{ inquiry.text }}<span id="plus-sign-inquiry-suggestions-title" class="glyphicon glyphicon-plus-sign red-font" aria-hidden="true" data-toggle="modal" data-target="#suggestion-form-modal"/></h3>
+    <h3 class="light-grey-font">{{ inquiry.text }}
+
+    {% if user.is_authenticated %}
+      <span id="plus-sign-inquiry-suggestions-title" class="glyphicon glyphicon-plus-sign red-font" aria-hidden="true" data-toggle="modal" data-target="#suggestion-form-modal"/>
+    {% else %}
+      <a href="{% url 'login'%}?next={{request.path}}"><span id="plus-sign-inquiry-suggestions-title" class="glyphicon glyphicon-plus-sign red-font" aria-hidden="true"/></a>
+    {% endif %}
+    </h3>
   </div>
 
   {% if suggestions %}
