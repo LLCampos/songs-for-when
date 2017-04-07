@@ -43,11 +43,6 @@
     font-size: 2em;
 }
 
-#suggestion-form-modal .modal-content,
-#youtube-url-form-modal .modal-content {
-    background-color: rgb(75, 78, 81);
-}
-
 #suggestion-form-modal .modal-header,
 #youtube-url-form-modal .modal-header {
     text-align: center;

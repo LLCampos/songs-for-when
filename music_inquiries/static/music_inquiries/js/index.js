@@ -42,7 +42,7 @@ $(() => {
     })
     .done(() => {
       // If inquiry already exists.
-      alert('Inquiry already exists! :)');
+      $('#repeated-inquiry-modal').modal('show');
     })
     .fail(() => {
       // If inquiry does not exists.
@@ -50,7 +50,8 @@ $(() => {
         url: inquiryResourceUrl,
         data: { inquiry_text: inquiry.text() },
         success: () => {
-          alert('Inquiry added!');
+          inquiry.clean();
+          $('#success-inquiry-modal').modal('show');
         },
       });
     });

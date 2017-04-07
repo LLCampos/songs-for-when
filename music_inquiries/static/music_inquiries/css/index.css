@@ -32,3 +32,20 @@
     cursor: pointer;
 }
 
+
+.feedback-modal {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 30%;
+}
+
+#repeated-inquiry-modal {
+    color: orange;
+    font-weight: 600;
+}
+
+#success-inquiry-modal {
+    color: yellowgreen;
+    font-weight: 600;
+}

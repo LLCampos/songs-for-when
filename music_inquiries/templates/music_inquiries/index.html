@@ -15,6 +15,27 @@
 
 </form>
 
+<div class="modal fade feedback-modal" id="repeated-inquiry-modal" tabindex="-1" role="dialog" aria-labelledby="feedback-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content dark-background">
+      <div class="modal-body">
+        <h4>That inquiry was already submitted!</h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade feedback-modal" id="success-inquiry-modal" tabindex="-1" role="dialog" aria-labelledby="feedback-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content dark-background">
+      <div class="modal-body">
+        <h4>Inquiry was successfully submitted!</h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 {% endblock %}
 
 {% block specific_scripts %}

@@ -57,3 +57,7 @@ body {
     border: none;
 }
 
+.dark-background {
+    background-color: rgb(75, 78, 81);
+}
+
